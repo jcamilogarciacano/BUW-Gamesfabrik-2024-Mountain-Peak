@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
         
             if (jumpTimer > 0)
             {   
-                //change the gravity to 30f
+                
                 jumpTimer -= Time.deltaTime;
                 // Apply the jump force for the duration of the jump timer
                 rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
         if (GetComponent<JetpackController>().enabled == false)
         {
             //change the gravity to 25f
-            gravityMultiplier = 30f;
+            gravityMultiplier = 25f;
             movementSpeedMultiplier = 6.0f;
         }
         else if (GetComponent<JetpackController>().enabled == true)

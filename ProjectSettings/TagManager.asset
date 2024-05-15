@@ -43,6 +43,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Collisions
+    uniqueID: 4144157789
+    locked: 0
   - name: Background_Far
     uniqueID: 1519387863
     locked: 0
