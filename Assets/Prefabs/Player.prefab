@@ -600,11 +600,12 @@ GameObject:
   - component: {fileID: 410832176645792681}
   - component: {fileID: 9101195590547763308}
   - component: {fileID: 4923653149618388987}
+  - component: {fileID: 3991015562166039294}
+  - component: {fileID: 1154637935149024354}
   - component: {fileID: 7307597264428441647}
   - component: {fileID: 4994087279847551966}
   - component: {fileID: 9203417617207460495}
   - component: {fileID: 1205258894374220702}
-  - component: {fileID: 1359015903221015661}
   - component: {fileID: 2628420869927256840}
   m_Layer: 8
   m_Name: Player
@@ -721,6 +722,36 @@ MonoBehaviour:
   movementSpeedMultiplier: 8
   jumpDuration: 0.3
   gravityMultiplier: 15
+--- !u!114 &3991015562166039294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8763472857035249201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66908dd057630c0489b57e5601c0aaa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashForce: 500
+  dashDuration: 0.2
+  cooldownTime: 0.2
+--- !u!114 &1154637935149024354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8763472857035249201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0492258ee5bf815469ba5cee96da55fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxForce: 1000
+  forceIncreaseRate: 100
+  disableForceTime: 2
 --- !u!114 &7307597264428441647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,7 +759,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8763472857035249201}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e22e5343832d6724591d3328c31209cd, type: 3}
   m_Name: 
@@ -737,9 +768,9 @@ MonoBehaviour:
   jumpStartTime: 0
   jumpDelay: 0.3
   jumpStrength: 300
-  jetpackCooldown: 1
+  jetpackCooldown: 0.1
   fuelBar: {fileID: 0}
-  jetpackDuration: 1.2
+  jetpackDuration: 5
   jetpackUsed: 0
   isGrounded: 0
   raycastDistance: 0.01
@@ -901,18 +932,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1359015903221015661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8763472857035249201}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 869b23006c29d8e4c87df544d49ac3e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2628420869927256840
 MonoBehaviour:
   m_ObjectHideFlags: 0

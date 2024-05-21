@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*So the list of anims would be (in order or priority)
+
+1. Iddle (the character just standing still waiting for a command)
+2. Walking ( or Running , do both if enough time) 
+3. Jumping
+4. Dashing to a side ( or sliding to a side) 
+5. Jetpack beign used ( some smoke effect or smth) 
+6. Rocket ( or maybe what it does is , inverse the gravity of the character? )
+*/
+
 public class PlayerController : MonoBehaviour
 {
     // The force applied to the player for jumping
