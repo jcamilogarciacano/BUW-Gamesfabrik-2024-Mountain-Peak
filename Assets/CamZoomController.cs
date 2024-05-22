@@ -15,6 +15,11 @@ public class CamZoomController : MonoBehaviour
     private float targetSize;
     private float currentSize;
 
+    public float switchInterval = 5f;
+    private float timer = 0f;
+
+
+
     private void Start()
     {
         cam = GetComponent<Camera>();
@@ -24,6 +29,24 @@ public class CamZoomController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            zoomedIn = !zoomedIn;
+        }
+        timer += Time.deltaTime;
+        if (timer >= switchInterval)
+        {
+            zoomedIn = !zoomedIn;
+            if (zoomedIn)
+            {
+                switchInterval = 7f;
+            }
+            else
+            {
+                switchInterval = 8f;
+            }
+            timer = 0f;
+        }
         // Check for state change and update target size accordingly
         if (zoomedIn)
         {
@@ -37,5 +60,10 @@ public class CamZoomController : MonoBehaviour
         // Smoothly interpolate the camera size towards the target size
         currentSize = Mathf.Lerp(currentSize, targetSize, zoomSpeed * Time.deltaTime);
         cam.orthographicSize = currentSize;
+    }
+
+    public bool IsZoomedIn()
+    {
+        return zoomedIn;
     }
 }

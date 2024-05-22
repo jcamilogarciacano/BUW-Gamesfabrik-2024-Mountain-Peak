@@ -19,7 +19,7 @@ public class JetpackController : MonoBehaviour
     public float raycastDistance = 0.01f; // Adjust this value to set the distance of the raycast
     void FixedUpdate()
     { 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W) || Input.GetAxis("Vertical") > 0)
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetAxis("Vertical") > 0)
         {
             if (!isJumping && jetpackCooldown <= 0f)
             {
@@ -28,7 +28,7 @@ public class JetpackController : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.Space) || Input.GetButton("Jump") || Input.GetKey(KeyCode.W) || Input.GetAxis("Vertical") > 0)
+        if (Input.GetKey(KeyCode.W) || Input.GetAxis("Vertical") > 0)
         {
             if (isJumping && jetpackUsed < jetpackDuration)
             {
@@ -75,7 +75,7 @@ public class JetpackController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Jump"))
+        if (Input.GetKeyUp(KeyCode.W) || Input.GetAxis("Vertical") <= 0)
         {
             isJumping = false;
         }
@@ -100,7 +100,7 @@ public class JetpackController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Platform"))
         {
             isGrounded = true;
         }

@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
     // The timer for the jump duration
     private float jumpTimer = 0.0f;
 
+    //check if grounded
+    public bool isGrounded = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,27 +69,24 @@ public class PlayerController : MonoBehaviour
         // Apply gravity with the gravity multiplier
         rb.AddForce(new Vector2(0, Physics2D.gravity.y * gravityMultiplier));
 
-        // Check if the player should jump
-        if (GetComponent<JetpackController>().enabled == false && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
+        // Check if the player should jump GetComponent<JetpackController>().enabled == false 
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")) && isGrounded == true)
         {
 
             // Start the jump timer
-            jumpTimer = jumpDuration;
+            jumpTimer = jumpDuration / 2;
             // Apply an upward force to the Rigidbody2D for jumping
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
         }
-        // Update the jump timer
-        if (Input.GetKey(KeyCode.Space) || Input.GetButton("Jump"))
+
+        if (jumpTimer > 0)
         {
-        
-            if (jumpTimer > 0)
-            {   
-                
-                jumpTimer -= Time.deltaTime;
-                // Apply the jump force for the duration of the jump timer
-                rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
-            }
+
+            jumpTimer -= Time.deltaTime;
+            // Apply the jump force for the duration of the jump timer
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
         }
+
         if (GetComponent<JetpackController>().enabled == false)
         {
             //change the gravity to 25f
@@ -98,6 +98,20 @@ public class PlayerController : MonoBehaviour
             //change the gravity to 15f
             gravityMultiplier = 15f;
             movementSpeedMultiplier = 8.0f;
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Platform"))
+        {
+            isGrounded = true;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Platform"))
+        {
+            isGrounded = false;
         }
     }
 }

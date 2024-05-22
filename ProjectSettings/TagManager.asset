@@ -9,11 +9,14 @@ TagManager:
   - Platform
   - PlatformCollider
   - Floor
+  - Tower
+  - LevelFloor
+  - Rock
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 

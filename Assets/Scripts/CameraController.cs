@@ -6,6 +6,8 @@ public class CameraController : MonoBehaviour
 {
     public Transform target; // Reference to the player GameObject
     public Vector3 offset; // Offset from the player's position
+
+        public Vector3 offsetZoomedIn; // Offset from the player's position
     public float delay = 0.1f; // Delay in following the player
     public float bounceAmount = 0.2f; // Amount of bounce effect
 
@@ -34,7 +36,16 @@ public class CameraController : MonoBehaviour
     private void CameraFollow()
     {
         // Calculate the desired position of the camera
-        Vector3 targetPosition = target.position + offset;
+        Vector3 targetPosition;
+        CamZoomController camZoomController = GetComponent<CamZoomController>();
+        if (camZoomController != null && camZoomController.IsZoomedIn())
+        {
+            targetPosition = target.position + offsetZoomedIn;
+        }
+        else
+        {
+            targetPosition = target.position + offset;
+        }
 
         // Apply the bounce effect
         targetPosition += CalculateBounceEffect();
