@@ -37,7 +37,7 @@ public class AnimationsController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isJumping = true;
-            jumpStartTime = Time.time;
+            //jumpStartTime = Time.time;
         }
 
         // Check if the player releases the space key to stop jumping
@@ -52,8 +52,8 @@ public class AnimationsController : MonoBehaviour
         // Adjust the speed of the jumping animation clip based on how long the player holds the space key
         if (isJumping)
         {
-            float jumpDuration = 1f - (Time.time - jumpStartTime) / 2f;
-            animator.SetFloat("JumpSpeed", jumpDuration);
+            //float jumpDuration = 1f - (Time.time - jumpStartTime) / 2f;
+            //animator.SetFloat("JumpSpeed", jumpDuration);
         }
         
     }

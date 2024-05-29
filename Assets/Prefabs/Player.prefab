@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5739446886710125303}
   - component: {fileID: 4021747102492828426}
   - component: {fileID: 518814251008670532}
+  - component: {fileID: 2729247096035706380}
   m_Layer: 8
   m_Name: PlatformCollider
   m_TagString: PlatformCollider
@@ -81,6 +82,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: 0.6
+--- !u!114 &2729247096035706380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260547859082777079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 374abb54ba4158b449b0d51d84b5b29d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbSpeed: 5
+  climbDistance: 1
+  climbDuration: 1
+  climbCooldown: 1
+  movementSpeed: 5
+  jumpForce: 5
+  jumpAngle: 45
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  isClimbing: 0
 --- !u!1 &2440140351235721173
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,10 +710,10 @@ GameObject:
   - component: {fileID: 1154637935149024354}
   - component: {fileID: 7307597264428441647}
   - component: {fileID: 2628420869927256840}
+  - component: {fileID: 3785695302843543541}
   - component: {fileID: 4994087279847551966}
   - component: {fileID: 9203417617207460495}
   - component: {fileID: 1205258894374220702}
-  - component: {fileID: 3785695302843543541}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -806,6 +830,7 @@ MonoBehaviour:
   movementSpeedMultiplier: 8
   jumpDuration: 0.3
   gravityMultiplier: 15
+  isGrounded: 0
 --- !u!114 &3991015562166039294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -868,6 +893,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffa8bda8315822c4fa7db77f30bf62e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3785695302843543541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8763472857035249201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ac7145ac91972e41baf02e3ea1ce2b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!50 &4994087279847551966
@@ -1028,15 +1065,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3785695302843543541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8763472857035249201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ac7145ac91972e41baf02e3ea1ce2b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
