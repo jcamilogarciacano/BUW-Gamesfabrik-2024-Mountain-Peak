@@ -10,8 +10,8 @@ public class Movement : MonoBehaviour
 
     public float climbingSpeed = 0.1f;
     public float originalGravityScale;
-    private bool isJumping = false;
-    private bool isDashing = false;
+    public bool isJumping = false;
+    public bool isDashing = false;
     // Add a new boolean variable to track whether the player is hanging
     public bool isHanging = false;
     public bool isClimbing = false;
@@ -86,15 +86,22 @@ public class Movement : MonoBehaviour
             rb.gravityScale = originalGravityScale * 3;
         }
 
-        if (rb.velocity.y < 0 && !isHanging && !isClimbing)
+        if (rb.velocity.y < -0.1f && !isHanging && !isClimbing)
         {
             isFalling = true;
             //InvokeRepeating("RemoveConstraint", 2f, 0.2f);
+            if (!isHanging && !isClimbing && !isJumping && !isDashing && !isFalling)
+            {
+               // InvokeRepeating("RemoveConstraint", 1f, 0.2f);
+            }
         }
         else
         {
             isFalling = false;
         }
+
+        // If the player is not hanging or climbing or jumping or anything, after 2 seconds, reset the y constraint
+
 
 
         // Update animator parameters
@@ -185,7 +192,7 @@ public class Movement : MonoBehaviour
     // create a small fuction to remove the constraint on Y after some seconds
     void RemoveConstraint()
     {
-        rb.constraints = rb.constraints ^ RigidbodyConstraints2D.FreezePositionY; // Remove FreezePositionY from the current constraints
+        rb.constraints = rb.constraints & ~RigidbodyConstraints2D.FreezePositionY; // Remove FreezePositionY from the current constraints
         CancelInvoke("RemoveConstraint");
     }
     void UpdatePosition()
@@ -290,7 +297,7 @@ public class Movement : MonoBehaviour
             {
                 isHanging = false;
                 shouldMove = false;
-                rb.constraints = rb.constraints ^ RigidbodyConstraints2D.FreezePositionY; // Remove FreezePositionY from the current constraints
+                 rb.constraints = rb.constraints & ~RigidbodyConstraints2D.FreezePositionY; // Remove FreezePositionY from the current constraints
             }
         }
         // this should only be false only if the player leaves collision while being underneath the collided platform
