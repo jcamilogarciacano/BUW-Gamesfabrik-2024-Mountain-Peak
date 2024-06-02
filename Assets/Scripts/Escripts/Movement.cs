@@ -6,6 +6,8 @@ public class Movement : MonoBehaviour
 {
     public float speed = 10f;
     public float jumpForce = 5f;
+
+    public float swingForce = 5f;
     public float dashSpeed = 20f;
 
     public float climbingSpeed = 0.1f;
@@ -15,8 +17,8 @@ public class Movement : MonoBehaviour
     // Add a new boolean variable to track whether the player is hanging
     public bool isHanging = false;
     public bool isClimbing = false;
-
     public bool isFalling = false;
+    public bool isHangingOnRope = false;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -28,6 +30,8 @@ public class Movement : MonoBehaviour
 
     // add a variable to store the collisioned object
     private GameObject collidedObject;
+
+    public GameObject currentRopeSegment;
 
     void Start()
     {
@@ -48,6 +52,10 @@ public class Movement : MonoBehaviour
         if (isHanging)
         {
             moveHorizontal *= 0.5f;
+        }
+        if(isHangingOnRope)
+        {
+            moveHorizontal = 0;
         }
         // Move the player horizontally
         rb.velocity = new Vector2(moveHorizontal * speed, rb.velocity.y);
@@ -81,7 +89,7 @@ public class Movement : MonoBehaviour
 
 
         // Double the gravity if the player is falling
-        if (isJumping && rb.velocity.y < 0)
+        if (isJumping && rb.velocity.y < 0 && !isHangingOnRope)
         {
             rb.gravityScale = originalGravityScale * 3;
         }
@@ -92,7 +100,7 @@ public class Movement : MonoBehaviour
             //InvokeRepeating("RemoveConstraint", 2f, 0.2f);
             if (!isHanging && !isClimbing && !isJumping && !isDashing && !isFalling)
             {
-               // InvokeRepeating("RemoveConstraint", 1f, 0.2f);
+                // InvokeRepeating("RemoveConstraint", 1f, 0.2f);
             }
         }
         else
@@ -100,10 +108,35 @@ public class Movement : MonoBehaviour
             isFalling = false;
         }
 
+/*         if (isHangingOnRope)
+        {
+              //set gravity to 0
+                rb.gravityScale = 0;
+            // If the player presses A, apply a force to the left
+            if (Input.GetKey(KeyCode.A))
+            {   
+                rb.AddForce(new Vector2(-swingForce, 0));
+            }
+            // If the player presses D, apply a force to the right
+            else if (Input.GetKey(KeyCode.D))
+            {
+                rb.AddForce(new Vector2(swingForce, 0));
+            }
+            // If the player presses Space, apply an upward force and stop hanging
+            if (Input.GetKey(KeyCode.Space))
+            {
+                rb.gravityScale = originalGravityScale;
+                rb.AddForce(new Vector2(0, jumpForce));
+                isHangingOnRope = false;
+                currentRopeSegment = null;
+            }
+            else if (currentRopeSegment != null)
+            {
+                // Move the current rope segment with the player
+               // currentRopeSegment.transform.position = transform.position;
+            }
+        } */
         // If the player is not hanging or climbing or jumping or anything, after 2 seconds, reset the y constraint
-
-
-
         // Update animator parameters
         animator.SetFloat("Speed", Mathf.Abs(moveHorizontal));
         animator.SetBool("IsJumping", isJumping);
@@ -111,7 +144,7 @@ public class Movement : MonoBehaviour
         animator.SetBool("IsHanging", isHanging);
         animator.SetBool("IsClimbing", isClimbing);
         animator.SetBool("IsFalling", isFalling);
-
+        animator.SetBool("IsHangingOnRope", isHangingOnRope);
     }
 
     void FixedUpdate()
@@ -144,6 +177,7 @@ public class Movement : MonoBehaviour
             return;
         }
         isHanging = true;
+
         // If the player presses W, move the player up
         if (Input.GetKey(KeyCode.W))
         {
@@ -297,7 +331,7 @@ public class Movement : MonoBehaviour
             {
                 isHanging = false;
                 shouldMove = false;
-                 rb.constraints = rb.constraints & ~RigidbodyConstraints2D.FreezePositionY; // Remove FreezePositionY from the current constraints
+                rb.constraints = rb.constraints & ~RigidbodyConstraints2D.FreezePositionY; // Remove FreezePositionY from the current constraints
             }
         }
         // this should only be false only if the player leaves collision while being underneath the collided platform
