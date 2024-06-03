@@ -233,6 +233,9 @@ public class Movement : MonoBehaviour
     {
         isClimbing = true;
         // Move towards the target position
+/*         if(Mathf.Abs(transform.position.y - targetPosition.y) < 0.1f){
+            
+        } */
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, increaseYSpeed);
         //freeze x and y movement 
         rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;

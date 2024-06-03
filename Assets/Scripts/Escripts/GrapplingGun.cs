@@ -82,6 +82,7 @@ public class GrapplingGun : MonoBehaviour
             if (grappleRope.enabled)
             {
                 RotateGun(grapplePoint, false);
+                movement.isHangingOnRope = true;
             }
             else
             {
@@ -94,7 +95,7 @@ public class GrapplingGun : MonoBehaviour
 
                 if (launchType == LaunchType.Transform_Launch)
                 {
-                    movement.isHangingOnRope = true;
+                    
                     Vector2 firePointDistnace = firePoint.position - gunHolder.localPosition;
                     Vector2 targetPos = grapplePoint - firePointDistnace;
                     gunHolder.position = Vector2.Lerp(gunHolder.position, targetPos, Time.deltaTime * launchSpeed);
