@@ -12,9 +12,11 @@ public class NextFloorSpawner : MonoBehaviour
     public Transform towerSpawnPoint; // Spawn point for the next floor
     float spawnInterval = 4f; // Time interval between spawning next floors
 
-    float spawnTowerInterval = 24; // Time interval between spawning next floors
+    float spawnTowerInterval = 24; // Time interval between spawning next towers
     float timer = 0f; // Timer to keep track of elapsed time
 
+    //create a variable to store all previosly spawned floors
+    List<GameObject> previousFloors = new List<GameObject>();
     float towerTimer = 0f; // Timer to keep track of elapsed time
     // Start is called before the first frame update
     void Start()
@@ -44,8 +46,8 @@ public class NextFloorSpawner : MonoBehaviour
                 towerTimer = 0f; // Reset the timer
             }
 
-        DespawnPreviousFloors(); // Despawn previous floors after 15 seconds
-        DespawnPreviousTowers(); // Despawn previous floors after 15 seconds
+        //DespawnPreviousFloors(); // Despawn previous floors after 15 seconds
+        //DespawnPreviousTowers(); // Despawn previous floors after 15 seconds
     }
 
     void DespawnPreviousFloors()
@@ -79,11 +81,25 @@ public class NextFloorSpawner : MonoBehaviour
         int randomIndex = Random.Range(0, nextFloors.Length);
         GameObject nextFloor = nextFloors[randomIndex];
 
+        // Check if the next floor is the same as the previously spawned floor
+        if (previousFloors.Count > 0)
+        {
+            while (previousFloors[previousFloors.Count - 1].name == nextFloor.name)
+            {
+                // Select another random index
+                randomIndex = Random.Range(0, nextFloors.Length);
+                nextFloor = nextFloors[randomIndex];
+            }
+        }
+
+        // Add the next floor to the previously spawned floors list
+        previousFloors.Add(nextFloor);
+
         // Spawn the next floor at the spawn point
         Instantiate(nextFloor, spawnPoint.position, Quaternion.identity);
 
         // Update the spawn point for the next floor
-        spawnPoint.position += Vector3.up * 20f;
+        spawnPoint.position += Vector3.up * 8f;
     }
     void SpawnNextTower()
     {
@@ -95,6 +111,6 @@ public class NextFloorSpawner : MonoBehaviour
         Instantiate(nextTower, towerSpawnPoint.position, Quaternion.identity);
 
         // Update the spawn point for the next floor
-        towerSpawnPoint.position += Vector3.up * 170f;
+        towerSpawnPoint.position += Vector3.up * 140f;
     }
 }

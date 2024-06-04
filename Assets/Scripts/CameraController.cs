@@ -40,11 +40,11 @@ public class CameraController : MonoBehaviour
         CamZoomController camZoomController = GetComponent<CamZoomController>();
         if (camZoomController != null && camZoomController.IsZoomedIn())
         {
-            targetPosition = target.position + offsetZoomedIn;
+            targetPosition = new Vector3(transform.position.x, target.position.y + offsetZoomedIn.y, target.position.z - offsetZoomedIn.z);
         }
         else
         {
-            targetPosition = target.position + offset;
+            targetPosition = new Vector3(transform.position.x, target.position.y + offset.y, target.position.z - offset.z);
         }
 
         // Apply the bounce effect
