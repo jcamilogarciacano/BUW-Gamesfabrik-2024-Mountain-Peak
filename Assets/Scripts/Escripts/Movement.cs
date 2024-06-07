@@ -232,7 +232,7 @@ public class Movement : MonoBehaviour
     void UpdatePosition()
     {
         isClimbing = true;
-        animator.SetLayerWeight(1, 1); // Enable the climbing animation layer
+        //animator.SetLayerWeight(1, 1); // Enable the climbing animation layer
         // Move towards the target position
 /*         if(Mathf.Abs(transform.position.y - targetPosition.y) < 0.1f){
             
@@ -252,7 +252,7 @@ public class Movement : MonoBehaviour
             // Stop invoking the UpdatePosition method
             platformOnTop = false;
             isClimbing = false;
-            animator.SetLayerWeight(1, 0); // Disable the climbing animation layer
+            //animator.SetLayerWeight(1, 0); // Disable the climbing animation layer
             CancelInvoke("UpdatePosition");
         }
     }
