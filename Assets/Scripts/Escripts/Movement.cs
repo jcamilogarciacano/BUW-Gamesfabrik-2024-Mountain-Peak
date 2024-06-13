@@ -38,6 +38,7 @@ public class Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         originalGravityScale = rb.gravityScale;
+    
     }
 
     void Update()
