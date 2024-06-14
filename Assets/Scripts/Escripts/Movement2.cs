@@ -11,7 +11,11 @@ public enum PlayerState
     Climbing,
     Hanging,
     Falling,
-    Idle
+    Idle,
+    RopeIddle,
+    RopeJumping,
+    RopeJumpingLeft,
+    RunningIn,
 }
 
 public class Movement2 : MonoBehaviour
@@ -28,6 +32,10 @@ public class Movement2 : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
+    bool isGrounded = false;
+
+    bool canJump = true;
+
     public PlayerState playerState = PlayerState.Idle;
 
     void Start()
@@ -41,52 +49,83 @@ public class Movement2 : MonoBehaviour
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
 
-        if (moveHorizontal > 0)
+        // Prioritize state transitions
+        if (Input.GetButtonDown("Stop"))
         {
-            spriteRenderer.flipX = false;
-            playerState = PlayerState.Walking;
-        }
-        else if (moveHorizontal < 0)
-        {
-            spriteRenderer.flipX = true;
-            playerState = PlayerState.Walking;
-        }
-
-        if (IsGrounded() && Mathf.Abs(moveHorizontal) < 0.1f && playerState != PlayerState.Jumping && playerState != PlayerState.Climbing && playerState != PlayerState.Falling)
-            playerState = PlayerState.Idle;
-
-        if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping)
-        {
-            playerState = PlayerState.Jumping;
-        }
-
-        if (Input.GetButtonDown("Climb"))
-        {
-            playerState = PlayerState.Climbing;
+            TransitionToState(PlayerState.Idle);
+            return;
         }
 
         if (Input.GetButtonDown("DashLeft"))
         {
-            playerState = PlayerState.DashingLeft;
+            TransitionToState(PlayerState.DashingLeft);
+            return;
         }
 
         if (Input.GetButtonDown("DashRight"))
         {
-            playerState = PlayerState.DashingRight;
+            TransitionToState(PlayerState.DashingRight);
+            return;
         }
 
-        if (Input.GetButtonDown("Stop"))
+        if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle)
         {
-            playerState = PlayerState.Idle;
+            TransitionToState(PlayerState.Jumping);
+            return;
+        }
+        else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
+        {
+            TransitionToState(PlayerState.Climbing);
+            return;
+        }
+        else if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal > 0)
+        {
+            TransitionToState(PlayerState.RopeJumping);
+            return;
+        }
+        else if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal < 0)
+        {
+            TransitionToState(PlayerState.RopeJumpingLeft);
+            return;
+        }
+        if (Input.GetButtonDown("Climb") && playerState != PlayerState.RopeIddle)
+        {
+            TransitionToState(PlayerState.Climbing);
+            return;
+        }
+        else if (Input.GetButtonDown("Climb") && playerState == PlayerState.RopeIddle)
+        {
+            // add the rope going up logic here
+            //TransitionToState(PlayerState.Idle);
+            return;
         }
 
-        // Check if the player is not on the ground and is not already jumping or climbing
-        if (!IsGrounded() && playerState != PlayerState.Jumping && playerState != PlayerState.Climbing)
+        // Walking or Idle
+        if (moveHorizontal != 0 && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft)
         {
-            playerState = PlayerState.Falling;
+            TransitionToState(PlayerState.Walking);
+            spriteRenderer.flipX = moveHorizontal < 0;
         }
+        else if (moveHorizontal == 0 && playerState == PlayerState.Walking)
+        {
+            TransitionToState(PlayerState.Idle);
+        }
+
+        if(playerState == PlayerState.RopeIddle){
+            //spriteRenderer.flipX = moveHorizontal < 0;
+        }
+
+        if (playerState == PlayerState.Falling)
+        {
+            CheckGround();
+            CheckLedge();
+            CheckRope();
+        }
+
+
         animator.SetFloat("Speed", Mathf.Abs(moveHorizontal));
         animator.SetInteger("PlayerState", (int)playerState);
+        animator.SetFloat("DirectionX", moveHorizontal);
     }
 
     void FixedUpdate()
@@ -94,22 +133,30 @@ public class Movement2 : MonoBehaviour
         switch (playerState)
         {
             case PlayerState.Walking:
-                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y);
+                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), 0);
                 break;
             case PlayerState.Jumping:
-                //rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                // Jump logic here
                 break;
             case PlayerState.Climbing:
-                rb.velocity = new Vector2(rb.velocity.x, climbingSpeed);
+                //rb.velocity = new Vector2(rb.velocity.x, climbingSpeed);
                 break;
             case PlayerState.DashingLeft:
-                //rb.velocity = new Vector2(-dashSpeed, rb.velocity.y);
+                // Dash left logic here
                 break;
             case PlayerState.DashingRight:
-                //rb.velocity = new Vector2(dashSpeed, rb.velocity.y);
+                // Dash right logic here
                 break;
             case PlayerState.Falling:
-                rb.velocity = new Vector2(rb.velocity.x, -fallSpeed);
+                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), -fallSpeed);
+                break;
+            case PlayerState.Hanging:
+                // Hanging logic here
+                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), 0);
+                CheckLedge();
+                break;
+            case PlayerState.RopeIddle:
+                rb.velocity = new Vector2(0, 0);
                 break;
             default:
                 rb.velocity = new Vector2(0, 0);
@@ -129,7 +176,8 @@ public class Movement2 : MonoBehaviour
     {
         if (playerState == PlayerState.Climbing)
         {
-            playerState = PlayerState.Idle;
+            CheckLedge();
+            //playerState = PlayerState.Idle;
         }
     }
 
@@ -164,22 +212,69 @@ public class Movement2 : MonoBehaviour
             playerState = PlayerState.Idle;
         }
     }
-    bool IsGrounded()
+
+    public void EndRopeJumping()
     {
-        float extraHeightText = 1f;
-        
-        RaycastHit2D raycastHit = Physics2D.Raycast(rb.position, Vector2.down, extraHeightText, LayerMask.GetMask("Climbable"));
-        Debug.DrawRay(rb.position, Vector2.down, Color.blue, extraHeightText);
-        if (raycastHit.collider != null)
+        if (playerState == PlayerState.RopeJumping || playerState == PlayerState.RopeJumpingLeft)
         {
-            print("IsGrounded with " + raycastHit.collider.name);
-            return true;
+            playerState = PlayerState.Falling;
         }
-        else
+    }
+
+    void TransitionToState(PlayerState newState)
+    {
+        // Here you can handle any setup or cleanup when transitioning between states
+        playerState = newState;
+    }
+
+    //check ground
+    private void CheckGround()
+    {
+        Vector2 floorPosition = new Vector2(transform.position.x, transform.position.y - 0.75f);
+        RaycastHit2D hit = Physics2D.Raycast(floorPosition, Vector2.down, rayLength, LayerMask.GetMask("Climbable"));
+        Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
+        if (hit.collider == null)
         {
-            print("Not Grounded");
-            return false;
+            playerState = PlayerState.Falling;
         }
-        
+        else if (hit.collider != null)
+        {
+            //isGrounded = true;
+            playerState = PlayerState.Idle;
+        }
+    }
+    private void CheckLedge()
+    {
+        //create a  position for the ledge raycast a little bit above the player
+        Vector2 ledgePosition = new Vector2(transform.position.x, transform.position.y + 0.5f);
+        RaycastHit2D hit2 = Physics2D.Raycast(ledgePosition, Vector2.up, rayLength, LayerMask.GetMask("Ledge"));
+        Debug.DrawRay(ledgePosition, Vector2.up, Color.blue, rayLength);
+
+        //shoot two more raycasts to the left and right top (diagonaly) of the player to check if there is a ledge
+        RaycastHit2D hit3 = Physics2D.Raycast(ledgePosition, new Vector2(-1, 1), rayLength, LayerMask.GetMask("Ledge"));
+        Debug.DrawRay(ledgePosition, new Vector2(-1, 1), Color.blue, rayLength);
+        RaycastHit2D hit4 = Physics2D.Raycast(ledgePosition, new Vector2(1, 1), rayLength, LayerMask.GetMask("Ledge"));
+        Debug.DrawRay(ledgePosition, new Vector2(1, 1), Color.blue, rayLength);
+
+        if (hit2.collider != null || hit3.collider != null || hit4.collider != null)
+        {
+            playerState = PlayerState.Hanging;
+        }
+        else if (hit2.collider == null && hit3.collider == null && hit4.collider == null && playerState != PlayerState.Idle)
+        {
+            playerState = PlayerState.Falling;
+        }
+    }
+
+    private void CheckRope()
+    {
+        Vector2 ropePosition = new Vector2(transform.position.x, transform.position.y + 0.5f);
+        RaycastHit2D hit5 = Physics2D.Raycast(ropePosition, Vector2.up, rayLength, LayerMask.GetMask("Rope"));
+        Debug.DrawRay(ropePosition, Vector2.up, Color.green, rayLength);
+        if (hit5.collider != null)
+        {
+            playerState = PlayerState.RopeIddle;
+        }
     }
 }
+

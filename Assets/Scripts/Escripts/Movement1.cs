@@ -142,9 +142,6 @@ public class Movement1 : MonoBehaviour
         }
         //  lets detect by using a raycast downwards if the player is standing on a platform
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength, LayerMask.GetMask("Climbable"));
-
-        //RaycastHit2D hit = Physics2D.Raycast(raycastPosition, Vector2.up, rayLength, LayerMask.GetMask("Climbable"));
-        //show the raycast in the editor
         Debug.DrawRay(transform.position, Vector2.down, Color.red, rayLength);
         if (hit.collider != null && hit.collider.tag == "Platform")
         {
