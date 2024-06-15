@@ -48,7 +48,7 @@ public class Movement2 : MonoBehaviour
     void Update()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
-
+        float moveVertical = Input.GetAxis("Vertical");
         // Prioritize state transitions
         if (Input.GetButtonDown("Stop"))
         {
@@ -88,7 +88,7 @@ public class Movement2 : MonoBehaviour
             TransitionToState(PlayerState.RopeJumpingLeft);
             return;
         }
-        if (Input.GetButtonDown("Climb") && playerState != PlayerState.RopeIddle)
+        if (Input.GetButtonDown("Climb") && playerState == PlayerState.Hanging)
         {
             TransitionToState(PlayerState.Climbing);
             return;
@@ -133,7 +133,7 @@ public class Movement2 : MonoBehaviour
         switch (playerState)
         {
             case PlayerState.Walking:
-                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), 0);
+                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), speed * Input.GetAxis("Vertical"));
                 break;
             case PlayerState.Jumping:
                 // Jump logic here
@@ -157,6 +157,10 @@ public class Movement2 : MonoBehaviour
                 break;
             case PlayerState.RopeIddle:
                 rb.velocity = new Vector2(0, 0);
+                break;
+            case PlayerState.RopeJumping:
+                break;
+            case PlayerState.RopeJumpingLeft:
                 break;
             default:
                 rb.velocity = new Vector2(0, 0);
@@ -260,7 +264,7 @@ public class Movement2 : MonoBehaviour
         {
             playerState = PlayerState.Hanging;
         }
-        else if (hit2.collider == null && hit3.collider == null && hit4.collider == null && playerState != PlayerState.Idle)
+        else if (hit2.collider == null && hit3.collider == null && hit4.collider == null && playerState != PlayerState.Idle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft)
         {
             playerState = PlayerState.Falling;
         }
