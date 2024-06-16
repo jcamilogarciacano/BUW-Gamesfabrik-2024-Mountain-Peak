@@ -36,7 +36,7 @@ public class Movement2 : MonoBehaviour
 
     bool canJump = true;
 
-    bool canClimb = false;
+    public bool canClimb = false;
 
     public PlayerState playerState = PlayerState.Idle;
 
@@ -56,6 +56,7 @@ public class Movement2 : MonoBehaviour
     public float slopeSpeed = 0f;
     float moveHorizontal = 0f;
 
+    public bool isFacingRight = true;
     Vector3 freezePosition;
 
     bool freezePositionSet = false;
@@ -70,6 +71,14 @@ public class Movement2 : MonoBehaviour
     {
 
         moveHorizontal = Input.GetAxis("Horizontal");
+        if (moveHorizontal > 0 && !isFacingRight)
+        {
+            Flip();
+        }
+        else if (moveHorizontal < 0 && isFacingRight)
+        {
+            Flip();
+        }
         _moveHorizontal = moveHorizontal;
         float moveVertical = Input.GetAxis("Vertical");
         // Prioritize state transitions
@@ -99,7 +108,14 @@ public class Movement2 : MonoBehaviour
         //else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
         else if (Input.GetButtonDown("Jump") && canClimb == true)
         {
-            TransitionToState(PlayerState.Climbing);
+            if (!isFacingRight)
+            {
+                TransitionToState(PlayerState.Climbing);
+            }
+            else if (isFacingRight)
+            {
+                TransitionToState(PlayerState.Climbing);
+            }
             return;
         }
         else if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal > 0)
@@ -128,7 +144,7 @@ public class Movement2 : MonoBehaviour
         if (moveHorizontal != 0 && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft)
         {
             TransitionToState(PlayerState.Walking);
-            spriteRenderer.flipX = moveHorizontal < 0;
+            //spriteRenderer.flipX = moveHorizontal < 0;
         }
         else if (moveHorizontal == 0 && playerState == PlayerState.Walking)
         {
@@ -167,7 +183,7 @@ public class Movement2 : MonoBehaviour
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y);
                 break;
             case PlayerState.Climbing:
-                rb.bodyType = RigidbodyType2D.Kinematic;
+
                 //rb.velocity = new Vector2(rb.velocity.x, climbingSpeed);
                 break;
             case PlayerState.DashingLeft:
@@ -217,6 +233,17 @@ public class Movement2 : MonoBehaviour
             CheckLedge();
             //playerState = PlayerState.Idle;
         }
+        //make dynamic
+        rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+    void Flip()
+    {
+        // Flip the character by multiplying the x component of the localScale by -1
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+
+        isFacingRight = !isFacingRight;
     }
 
     public void EndDashingLeft()
@@ -287,7 +314,7 @@ public class Movement2 : MonoBehaviour
         //Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
         RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.5f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
         float newMoveHori = 0f;
-        if (spriteRenderer.flipX == true)
+        if (isFacingRight == false)
         {
             newMoveHori = -1f;
         }
@@ -413,6 +440,11 @@ public class Movement2 : MonoBehaviour
         {
             playerState = PlayerState.RopeIddle;
         }
+    }
+
+    private void MakeKinematic()
+    {
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 }
 
