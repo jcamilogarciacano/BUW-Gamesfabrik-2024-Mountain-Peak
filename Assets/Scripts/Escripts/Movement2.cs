@@ -36,6 +36,8 @@ public class Movement2 : MonoBehaviour
 
     bool canJump = true;
 
+    bool canClimb = false;
+
     public PlayerState playerState = PlayerState.Idle;
 
 
@@ -89,12 +91,13 @@ public class Movement2 : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle)
+        if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle && canClimb == false)
         {
             TransitionToState(PlayerState.Jumping);
             return;
         }
-        else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
+        //else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
+        else if (Input.GetButtonDown("Jump") && canClimb == true)
         {
             TransitionToState(PlayerState.Climbing);
             return;
@@ -158,9 +161,13 @@ public class Movement2 : MonoBehaviour
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), slopeSpeed * Input.GetAxis("Horizontal"));
                 break;
             case PlayerState.Jumping:
+                // change rigidbody to dynamic so the player can jump
+                rb.bodyType = RigidbodyType2D.Kinematic;
                 // Jump logic here
+                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y);
                 break;
             case PlayerState.Climbing:
+                rb.bodyType = RigidbodyType2D.Kinematic;
                 //rb.velocity = new Vector2(rb.velocity.x, climbingSpeed);
                 break;
             case PlayerState.DashingLeft:
@@ -170,6 +177,7 @@ public class Movement2 : MonoBehaviour
                 // Dash right logic here
                 break;
             case PlayerState.Falling:
+                //rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), -fallSpeed);
                 break;
             case PlayerState.Hanging:
@@ -186,6 +194,9 @@ public class Movement2 : MonoBehaviour
                 break;
             default:
                 //  freezePositionSet = false;
+                //change rigidbody to kinematic so the player can walk
+                CheckGround();
+                rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.velocity = new Vector2(0, 0);
                 break;
         }
@@ -275,37 +286,53 @@ public class Movement2 : MonoBehaviour
         //RaycastHit2D hit = Physics2D.Raycast(floorPosition, Vector2.down, rayLength, LayerMask.GetMask("Climbable"));
         //Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
         RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.5f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
-
+        float newMoveHori = 0f;
+        if (spriteRenderer.flipX == true)
+        {
+            newMoveHori = -1f;
+        }
+        else
+        {
+            newMoveHori = 1f;
+        }
         Vector2 wallDetectionPosition1 = new Vector2(transform.position.x, transform.position.y - wallCheckDistance / 3);
-        Vector2 wallDetectionPosition2 = new Vector2(transform.position.x, transform.position.y - wallCheckDistance / 2);
+        Vector2 wallDetectionPosition2 = new Vector2(transform.position.x, transform.position.y - wallCheckDistance / 1.5f);
         Vector2 wallDetectionPosition3 = new Vector2(transform.position.x, transform.position.y);
-        Vector2 wallDetectionPosition4 = new Vector2(transform.position.x, transform.position.y + wallCheckDistance / 2);
-        RaycastHit2D hit3 = Physics2D.Raycast(wallDetectionPosition1, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
-        RaycastHit2D hit4 = Physics2D.Raycast(wallDetectionPosition2, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
-        RaycastHit2D hit5 = Physics2D.Raycast(wallDetectionPosition3, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
-        RaycastHit2D hit6 = Physics2D.Raycast(wallDetectionPosition4, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
-        Debug.DrawRay(wallDetectionPosition1, Vector2.right * _moveHorizontal, Color.red, wallCheckRayLength);
-        Debug.DrawRay(wallDetectionPosition2, Vector2.right * _moveHorizontal, Color.blue, wallCheckRayLength);
-        Debug.DrawRay(wallDetectionPosition3, Vector2.right * _moveHorizontal, Color.green, wallCheckRayLength);
-        Debug.DrawRay(wallDetectionPosition4, Vector2.right * _moveHorizontal, Color.yellow, wallCheckRayLength);
+        Vector2 wallDetectionPosition4 = new Vector2(transform.position.x, transform.position.y + wallCheckDistance / 2.5f);
+        RaycastHit2D hit3 = Physics2D.Raycast(wallDetectionPosition1, Vector2.right * newMoveHori, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit4 = Physics2D.Raycast(wallDetectionPosition2, Vector2.right * newMoveHori, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit5 = Physics2D.Raycast(wallDetectionPosition3, Vector2.right * newMoveHori, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit6 = Physics2D.Raycast(wallDetectionPosition4, Vector2.right * newMoveHori, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        Debug.DrawRay(wallDetectionPosition1, Vector2.right * newMoveHori, Color.red, wallCheckRayLength);
+        Debug.DrawRay(wallDetectionPosition2, Vector2.right * newMoveHori, Color.blue, wallCheckRayLength);
+        Debug.DrawRay(wallDetectionPosition3, Vector2.right * newMoveHori, Color.green, wallCheckRayLength);
+        Debug.DrawRay(wallDetectionPosition4, Vector2.right * newMoveHori, Color.yellow, wallCheckRayLength);
 
         //lets add a raycast to the direction the player is walking to check if it is walking on a slope
         #region floor / slopes
         RaycastHit2D hit1 = Physics2D.Raycast(floorPosition, Vector2.right, rayLength, LayerMask.GetMask("Climbable"));
         RaycastHit2D hit2 = Physics2D.Raycast(floorPosition, Vector2.left, rayLength, LayerMask.GetMask("Climbable"));
-        Debug.DrawRay(floorPosition, Vector2.right, Color.red, rayLength);
-        Debug.DrawRay(floorPosition, Vector2.left, Color.red, rayLength);
+        Debug.DrawRay(floorPosition, Vector2.right, Color.red, rayLength / 2);
+        Debug.DrawRay(floorPosition, Vector2.left, Color.red, rayLength / 2);
 
-        if (hit3.collider == null && hit4.collider == null && hit5.collider == null && hit6.collider == null)
+        if (hit3.collider == null || hit4.collider == null)
         {
             if (hit1.collider != null && hit2.collider != null)
             {
                 transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);
+                print("inside slope");
             }
-            else if (hit1.collider != null || hit2.collider != null)
+            else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Walking)
             {
                 //transform player Y position up so  the player is not inside the slope
+                transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
+                print(" increase step height on");
                 slopeSpeed = 1f;
+            }
+            else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Falling)
+            {
+                playerState = PlayerState.Idle;
+                slopeSpeed = 0f;
             }
             else
             {
@@ -317,6 +344,7 @@ public class Movement2 : MonoBehaviour
         }
         else if (hit3.collider != null || hit4.collider != null)
         {
+            print("wall detected???");
             if (freezePositionSet == false)
             {
                 freezePosition = transform.position;
@@ -325,12 +353,21 @@ public class Movement2 : MonoBehaviour
             //create a new variable with move horizontal value to avoid the player getting stuck in the wall
             float newMoveHorizontal = Mathf.Clamp(_moveHorizontal, -0.3f, 0.3f);
             //save the player from getting stuck in the wall
-            transform.position = freezePosition;
+            //transform.position = freezePosition;
             //transform.position = new Vector2(transform.position.x + (newMoveHorizontal * -1f), transform.position.y);
         }
         if (hit3.collider == null || hit4.collider == null)
         {
             freezePositionSet = false;
+        }
+        if (hit6.collider != null && (playerState == PlayerState.Walking || playerState == PlayerState.Idle))
+        {
+            canClimb = true;
+            print("climbable wall detected");
+        }
+        else
+        {
+            canClimb = false;
         }
         #endregion
 

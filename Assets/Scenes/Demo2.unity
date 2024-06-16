@@ -247,8 +247,8 @@ Transform:
   m_GameObject: {fileID: 27838241}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9477, y: 0.9341, z: 0}
-  m_LocalScale: {x: 0.6794, y: 0.6580042, z: 0}
+  m_LocalPosition: {x: 0.9477, y: 0.9175, z: 0}
+  m_LocalScale: {x: 0.6794, y: 0.69129926, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -400,19 +400,23 @@ PolygonCollider2D:
       - {x: -1.277315, y: -13.240441}
       - {x: -1.295, y: -16.065}
       - {x: -1.275, y: -16.135}
-      - {x: -0.72499996, y: -16.065}
-      - {x: 0.955, y: -16.045}
-      - {x: 1.395, y: -16.025}
-      - {x: 1.7149999, y: -16.305}
-      - {x: 1.9549999, y: -16.324999}
-      - {x: 3.745, y: -16.345}
-      - {x: 4.2120776, y: -16.344692}
-      - {x: 4.284775, y: -16.352997}
-      - {x: 4.3177567, y: -16.482708}
-      - {x: 4.326288, y: -16.494116}
-      - {x: 4.348533, y: -16.498676}
-      - {x: 5.3132334, y: -16.497314}
-      - {x: 5.313986, y: -16.005978}
+      - {x: -0.99399716, y: -14.481579}
+      - {x: -0.74916077, y: -13.805395}
+      - {x: 0.47202498, y: -13.893016}
+      - {x: 1.370544, y: -13.793537}
+      - {x: 1.721113, y: -14.770488}
+      - {x: 2.2362251, y: -14.937212}
+      - {x: 2.7635822, y: -14.87471}
+      - {x: 3.2131166, y: -15.531891}
+      - {x: 3.4295382, y: -15.52547}
+      - {x: 3.850708, y: -15.497093}
+      - {x: 4.140461, y: -15.920257}
+      - {x: 4.1673336, y: -15.9255495}
+      - {x: 4.204014, y: -15.907211}
+      - {x: 4.2446017, y: -15.881204}
+      - {x: 5.190962, y: -15.916523}
+      - {x: 5.2676554, y: -15.921771}
+      - {x: 5.3138065, y: -15.919317}
       - {x: 5.315955, y: -15.840226}
       - {x: 5.31772, y: -15.755405}
   m_UseDelaunayMesh: 0
@@ -773,9 +777,25 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: ce85898feb6e81a42af1445a47c6109e, type: 2}
+    - target: {fileID: 5425916818386150091, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+      propertyPath: m_Size.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5425916818386150091, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 5578760609226126965, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
       propertyPath: m_Name
       value: Player 1 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8195195612318946202, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8195195612318946202, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 71442346115630656, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
@@ -1333,8 +1353,8 @@ Transform:
   m_GameObject: {fileID: 1025638709}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.9059, y: 1.1943, z: 0}
-  m_LocalScale: {x: 0.6272221, y: 1.1947852, z: 0}
+  m_LocalPosition: {x: 3.9059, y: 1.2807, z: 0}
+  m_LocalScale: {x: 0.6272221, y: 1.3987036, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1769,8 +1789,8 @@ Transform:
   m_GameObject: {fileID: 1352726562}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.273, y: 0.6935, z: 0}
-  m_LocalScale: {x: 0.6794, y: 0.17686103, z: 0}
+  m_LocalPosition: {x: 6.273, y: 0.6764, z: 0}
+  m_LocalScale: {x: 0.6794, y: 0.21111901, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2764,11 +2784,12 @@ PolygonCollider2D:
       - {x: 3.3688116, y: -17.175571}
       - {x: 2.7767735, y: -17.176199}
       - {x: 2.7778704, y: -17.870531}
-      - {x: 2.5733414, y: -17.871098}
-      - {x: 2.0995874, y: -17.885702}
-      - {x: 2.0952826, y: -18.56764}
-      - {x: 1.3995605, y: -18.564413}
-      - {x: 0.70486146, y: -18.565548}
+      - {x: 2.7774506, y: -17.874222}
+      - {x: 2.568653, y: -17.874222}
+      - {x: 2.1052656, y: -17.873312}
+      - {x: 2.0951357, y: -18.57492}
+      - {x: 0.7059932, y: -18.574917}
+      - {x: 0.70493966, y: -18.574867}
       - {x: 0.7037838, y: -19.254503}
       - {x: 0.10614753, y: -19.256655}
       - {x: -0.46489227, y: -19.255636}
@@ -2906,11 +2927,11 @@ MonoBehaviour:
   fallSpeed: 2
   dashSpeed: 3
   climbingSpeed: 0.1
-  rayLength: 0
+  rayLength: 0.3
   playerState: 7
   floorCheckDistance: 0.9
   wallCheckDistance: 1
-  wallCheckRayLength: 0.1
+  wallCheckRayLength: 0.4
   ledgeCheckDistance: 1
   _moveHorizontal: 0
   slopeSpeed: 0
