@@ -38,6 +38,25 @@ public class Movement2 : MonoBehaviour
 
     public PlayerState playerState = PlayerState.Idle;
 
+
+    private Vector2 floorPosition;
+
+    private Vector2 jumpPosition;
+
+    public float floorCheckDistance = 1f;
+    public float wallCheckDistance = 1f;
+
+    public float wallCheckRayLength = 1f;
+
+    public float ledgeCheckDistance = 1f;
+
+    public float _moveHorizontal = 0f;
+    public float slopeSpeed = 0f;
+    float moveHorizontal = 0f;
+
+    Vector3 freezePosition;
+
+    bool freezePositionSet = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -47,7 +66,9 @@ public class Movement2 : MonoBehaviour
 
     void Update()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
+
+        moveHorizontal = Input.GetAxis("Horizontal");
+        _moveHorizontal = moveHorizontal;
         float moveVertical = Input.GetAxis("Vertical");
         // Prioritize state transitions
         if (Input.GetButtonDown("Stop"))
@@ -111,7 +132,8 @@ public class Movement2 : MonoBehaviour
             TransitionToState(PlayerState.Idle);
         }
 
-        if(playerState == PlayerState.RopeIddle){
+        if (playerState == PlayerState.RopeIddle)
+        {
             //spriteRenderer.flipX = moveHorizontal < 0;
         }
 
@@ -133,7 +155,7 @@ public class Movement2 : MonoBehaviour
         switch (playerState)
         {
             case PlayerState.Walking:
-                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), speed * Input.GetAxis("Vertical"));
+                rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), slopeSpeed * Input.GetAxis("Horizontal"));
                 break;
             case PlayerState.Jumping:
                 // Jump logic here
@@ -163,6 +185,7 @@ public class Movement2 : MonoBehaviour
             case PlayerState.RopeJumpingLeft:
                 break;
             default:
+                //  freezePositionSet = false;
                 rb.velocity = new Vector2(0, 0);
                 break;
         }
@@ -231,17 +254,91 @@ public class Movement2 : MonoBehaviour
         playerState = newState;
     }
 
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.5f);
+        Gizmos.DrawCube(floorPosition, new Vector3(0.5f, 0.1f, 1));
+    }
+
+    private void CheckWalls()
+    {
+
+
+    }
     //check ground
     private void CheckGround()
     {
-        Vector2 floorPosition = new Vector2(transform.position.x, transform.position.y - 0.75f);
-        RaycastHit2D hit = Physics2D.Raycast(floorPosition, Vector2.down, rayLength, LayerMask.GetMask("Climbable"));
-        Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
-        if (hit.collider == null)
+        //  RaycastHit2D BoxCast(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance = Mathf.Infinity, int layerMask 
+        //= Physics2D.AllLayers, float minDepth = -Mathf.Infinity, float maxDepth = Mathf.Infinity); 
+        floorPosition = new Vector2(transform.position.x, transform.position.y - floorCheckDistance);
+        //RaycastHit2D hit = Physics2D.Raycast(floorPosition, Vector2.down, rayLength, LayerMask.GetMask("Climbable"));
+        //Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
+        RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.5f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
+
+        Vector2 wallDetectionPosition1 = new Vector2(transform.position.x, transform.position.y - wallCheckDistance / 3);
+        Vector2 wallDetectionPosition2 = new Vector2(transform.position.x, transform.position.y - wallCheckDistance / 2);
+        Vector2 wallDetectionPosition3 = new Vector2(transform.position.x, transform.position.y);
+        Vector2 wallDetectionPosition4 = new Vector2(transform.position.x, transform.position.y + wallCheckDistance / 2);
+        RaycastHit2D hit3 = Physics2D.Raycast(wallDetectionPosition1, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit4 = Physics2D.Raycast(wallDetectionPosition2, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit5 = Physics2D.Raycast(wallDetectionPosition3, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit6 = Physics2D.Raycast(wallDetectionPosition4, Vector2.right * _moveHorizontal, wallCheckRayLength, LayerMask.GetMask("Climbable"));
+        Debug.DrawRay(wallDetectionPosition1, Vector2.right * _moveHorizontal, Color.red, wallCheckRayLength);
+        Debug.DrawRay(wallDetectionPosition2, Vector2.right * _moveHorizontal, Color.blue, wallCheckRayLength);
+        Debug.DrawRay(wallDetectionPosition3, Vector2.right * _moveHorizontal, Color.green, wallCheckRayLength);
+        Debug.DrawRay(wallDetectionPosition4, Vector2.right * _moveHorizontal, Color.yellow, wallCheckRayLength);
+
+        //lets add a raycast to the direction the player is walking to check if it is walking on a slope
+        #region floor / slopes
+        RaycastHit2D hit1 = Physics2D.Raycast(floorPosition, Vector2.right, rayLength, LayerMask.GetMask("Climbable"));
+        RaycastHit2D hit2 = Physics2D.Raycast(floorPosition, Vector2.left, rayLength, LayerMask.GetMask("Climbable"));
+        Debug.DrawRay(floorPosition, Vector2.right, Color.red, rayLength);
+        Debug.DrawRay(floorPosition, Vector2.left, Color.red, rayLength);
+
+        if (hit3.collider == null && hit4.collider == null && hit5.collider == null && hit6.collider == null)
+        {
+            if (hit1.collider != null && hit2.collider != null)
+            {
+                transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);
+            }
+            else if (hit1.collider != null || hit2.collider != null)
+            {
+                //transform player Y position up so  the player is not inside the slope
+                slopeSpeed = 1f;
+            }
+            else
+            {
+                slopeSpeed = 0f;
+            }
+            #endregion
+
+            #region wall 
+        }
+        else if (hit3.collider != null || hit4.collider != null)
+        {
+            if (freezePositionSet == false)
+            {
+                freezePosition = transform.position;
+                freezePositionSet = true;
+            }
+            //create a new variable with move horizontal value to avoid the player getting stuck in the wall
+            float newMoveHorizontal = Mathf.Clamp(_moveHorizontal, -0.3f, 0.3f);
+            //save the player from getting stuck in the wall
+            transform.position = freezePosition;
+            //transform.position = new Vector2(transform.position.x + (newMoveHorizontal * -1f), transform.position.y);
+        }
+        if (hit3.collider == null || hit4.collider == null)
+        {
+            freezePositionSet = false;
+        }
+        #endregion
+
+        if (BoxCast.collider == null)
         {
             playerState = PlayerState.Falling;
         }
-        else if (hit.collider != null)
+        else if (BoxCast.collider != null)
         {
             //isGrounded = true;
             playerState = PlayerState.Idle;
