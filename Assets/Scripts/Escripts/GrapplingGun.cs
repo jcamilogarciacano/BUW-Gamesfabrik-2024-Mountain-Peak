@@ -65,20 +65,20 @@ public class GrapplingGun : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Mouse0))
         {
-            Movement movement = m_rigidbody.gameObject.GetComponent<Movement>();
+            Movement2 movement = m_rigidbody.gameObject.GetComponent<Movement2>();
             
             //get movement script from player and ask if the player is climbing
             // if the player is climbing, disable grapple rope and springjoint and set gravity to 1]
             // get movement script from player
 
-            if (movement.isHanging)
+            /* if (movement.isHanging)
             {
                 movement.isHangingOnRope = false;
                 grappleRope.enabled = false;
                 m_springJoint2D.enabled = false;
                 m_rigidbody.gravityScale = 1;
 
-            }
+            } */
             if (grappleRope.enabled)
             {
                 RotateGun(grapplePoint, false);
@@ -105,12 +105,12 @@ public class GrapplingGun : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            Movement movement = m_rigidbody.gameObject.GetComponent<Movement>();
+            Movement2 movement = m_rigidbody.gameObject.GetComponent<Movement2>();
 
             movement.isHangingOnRope = false;
             grappleRope.enabled = false;
             m_springJoint2D.enabled = false;
-            m_rigidbody.gravityScale = 1;
+            //m_rigidbody.gravityScale = 1;
         }
         else
         {
@@ -185,7 +185,7 @@ public class GrapplingGun : MonoBehaviour
                     m_springJoint2D.enabled = true;
                     break;
                 case LaunchType.Transform_Launch:
-                    m_rigidbody.gravityScale = 0;
+                    //m_rigidbody.gravityScale = 0;
                     m_rigidbody.velocity = Vector2.zero;
                     break;
             }

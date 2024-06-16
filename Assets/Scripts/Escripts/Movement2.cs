@@ -1,23 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum PlayerState
+using Game.States;
+namespace Game.States
 {
-    Walking,
-    Jumping,
-    DashingLeft,
-    DashingRight,
-    Climbing,
-    Hanging,
-    Falling,
-    Idle,
-    RopeIddle,
-    RopeJumping,
-    RopeJumpingLeft,
-    RunningIn,
-}
 
+    public enum PlayerState
+    {
+        Walking,
+        Jumping,
+        DashingLeft,
+        DashingRight,
+        Climbing,
+        Hanging,
+        Falling,
+        Idle,
+        RopeIddle,
+        RopeJumping,
+        RopeJumpingLeft,
+        RunningIn,
+
+        GrapplingGun
+    }
+
+}
 public class Movement2 : MonoBehaviour
 {
     public float speed = 10f;
@@ -60,6 +66,8 @@ public class Movement2 : MonoBehaviour
     Vector3 freezePosition;
 
     bool freezePositionSet = false;
+
+    public bool isHangingOnRope = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -155,7 +163,7 @@ public class Movement2 : MonoBehaviour
         {
             //spriteRenderer.flipX = moveHorizontal < 0;
         }
-
+    	
         if (playerState == PlayerState.Falling)
         {
             CheckGround();
@@ -163,7 +171,10 @@ public class Movement2 : MonoBehaviour
             CheckRope();
         }
 
-
+        if(isHangingOnRope == true)
+        {
+            TransitionToState(PlayerState.GrapplingGun);
+        }
         animator.SetFloat("Speed", Mathf.Abs(moveHorizontal));
         animator.SetInteger("PlayerState", (int)playerState);
         animator.SetFloat("DirectionX", moveHorizontal);
@@ -178,7 +189,7 @@ public class Movement2 : MonoBehaviour
                 break;
             case PlayerState.Jumping:
                 // change rigidbody to dynamic so the player can jump
-                rb.bodyType = RigidbodyType2D.Kinematic;
+                //rb.bodyType = RigidbodyType2D.Kinematic;
                 // Jump logic here
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y);
                 break;
@@ -202,7 +213,7 @@ public class Movement2 : MonoBehaviour
                 CheckLedge();
                 break;
             case PlayerState.RopeIddle:
-                rb.velocity = new Vector2(0, 0);
+                rb.velocity = new Vector2(0, speed * Input.GetAxis("Vertical"));
                 break;
             case PlayerState.RopeJumping:
                 break;
@@ -212,7 +223,7 @@ public class Movement2 : MonoBehaviour
                 //  freezePositionSet = false;
                 //change rigidbody to kinematic so the player can walk
                 CheckGround();
-                rb.bodyType = RigidbodyType2D.Dynamic;
+                //rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.velocity = new Vector2(0, 0);
                 break;
         }
@@ -284,6 +295,10 @@ public class Movement2 : MonoBehaviour
         {
             playerState = PlayerState.Falling;
         }
+    }
+
+    public void StartGraplingGun(){
+        moveHorizontal = 0;
     }
 
     void TransitionToState(PlayerState newState)
@@ -440,11 +455,19 @@ public class Movement2 : MonoBehaviour
         {
             playerState = PlayerState.RopeIddle;
         }
+        else if (hit5.collider == null && playerState == PlayerState.RopeIddle)
+        {
+            playerState = PlayerState.Falling;
+        }
     }
 
     private void MakeKinematic()
     {
         rb.bodyType = RigidbodyType2D.Kinematic;
+    }
+    private void MakeDynamic()
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
     }
 }
 
