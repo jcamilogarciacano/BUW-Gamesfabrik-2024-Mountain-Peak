@@ -19,6 +19,8 @@ public class NextFloorSpawner : MonoBehaviour
     List<GameObject> previousFloors = new List<GameObject>();
     float towerTimer = 0f; // Timer to keep track of elapsed time
     // Start is called before the first frame update
+
+    float distanceBetweenFloors = 8f; // Distance between each floor
     void Start()
     {
         SpawnNextFloor();
@@ -98,8 +100,11 @@ public class NextFloorSpawner : MonoBehaviour
         // Spawn the next floor at the spawn point
         Instantiate(nextFloor, spawnPoint.position, Quaternion.identity);
 
+
+        // create a temp variable to randomly change the distance for the next floor using the distanceBetweenFloors variable
+        float distance = Random.Range(distanceBetweenFloors - 6f, distanceBetweenFloors);
         // Update the spawn point for the next floor
-        spawnPoint.position += Vector3.up * 8f;
+        spawnPoint.position += Vector3.up * distance;
     }
     void SpawnNextTower()
     {
