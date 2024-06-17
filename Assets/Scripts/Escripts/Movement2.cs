@@ -44,6 +44,8 @@ public class Movement2 : MonoBehaviour
 
     public bool canClimb = false;
 
+    public bool canRunInStairs = false;
+
     public PlayerState playerState = PlayerState.Idle;
 
 
@@ -110,11 +112,21 @@ public class Movement2 : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle && canClimb == false)
         {
-            TransitionToState(PlayerState.Jumping);
+            
+            if (canRunInStairs == true)
+            {
+                
+                TransitionToState(PlayerState.RunningIn);
+            }
+            else
+            {
+                TransitionToState(PlayerState.Jumping);
+            }
+
             return;
         }
         //else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
-        else if (Input.GetButtonDown("Jump") && canClimb == true)
+        else if (Input.GetButtonDown("Jump") && canClimb == true && canRunInStairs == false)
         {
             if (!isFacingRight)
             {
@@ -163,7 +175,7 @@ public class Movement2 : MonoBehaviour
         {
             //spriteRenderer.flipX = moveHorizontal < 0;
         }
-    	
+
         if (playerState == PlayerState.Falling)
         {
             CheckGround();
@@ -171,7 +183,7 @@ public class Movement2 : MonoBehaviour
             CheckRope();
         }
 
-        if(isHangingOnRope == true)
+        if (isHangingOnRope == true)
         {
             TransitionToState(PlayerState.GrapplingGun);
         }
@@ -223,6 +235,7 @@ public class Movement2 : MonoBehaviour
                 //  freezePositionSet = false;
                 //change rigidbody to kinematic so the player can walk
                 CheckGround();
+                CheckStairs();
                 //rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.velocity = new Vector2(0, 0);
                 break;
@@ -297,7 +310,8 @@ public class Movement2 : MonoBehaviour
         }
     }
 
-    public void StartGraplingGun(){
+    public void StartGraplingGun()
+    {
         moveHorizontal = 0;
     }
 
@@ -329,7 +343,7 @@ public class Movement2 : MonoBehaviour
         //Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
         RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.5f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
         float newMoveHori = 0f;
-        if (isFacingRight == false)
+        if (isFacingRight == false && playerState != PlayerState.RunningIn)
         {
             newMoveHori = -1f;
         }
@@ -357,7 +371,7 @@ public class Movement2 : MonoBehaviour
         Debug.DrawRay(floorPosition, Vector2.right, Color.red, rayLength / 2);
         Debug.DrawRay(floorPosition, Vector2.left, Color.red, rayLength / 2);
 
-        if (hit3.collider == null || hit4.collider == null)
+        if (hit3.collider == null || hit4.collider == null && playerState != PlayerState.RunningIn)
         {
             if (hit1.collider != null && hit2.collider != null)
             {
@@ -384,7 +398,7 @@ public class Movement2 : MonoBehaviour
 
             #region wall 
         }
-        else if (hit3.collider != null || hit4.collider != null)
+        else if (hit3.collider != null || hit4.collider != null && playerState != PlayerState.RunningIn)
         {
             print("wall detected???");
             if (freezePositionSet == false)
@@ -413,11 +427,11 @@ public class Movement2 : MonoBehaviour
         }
         #endregion
 
-        if (BoxCast.collider == null)
+        if (BoxCast.collider == null && playerState != PlayerState.RunningIn)
         {
             playerState = PlayerState.Falling;
         }
-        else if (BoxCast.collider != null)
+        else if (BoxCast.collider != null && playerState != PlayerState.RunningIn)
         {
             //isGrounded = true;
             playerState = PlayerState.Idle;
@@ -446,6 +460,24 @@ public class Movement2 : MonoBehaviour
         }
     }
 
+    private void CheckStairs()
+    {
+        //create a  position for the ledge raycast a little bit above the player
+        Vector2 ledgePosition = new Vector2(transform.position.x, transform.position.y);
+        RaycastHit2D hit2 = Physics2D.Raycast(ledgePosition, Vector2.up, 1, LayerMask.GetMask("InStairs"));
+        Debug.DrawRay(ledgePosition, Vector2.up, Color.yellow, 1);
+
+
+        if (hit2.collider != null)
+        {
+            canRunInStairs = true;
+            //playerState = PlayerState.RunningIn;
+        }
+        else
+        {
+            canRunInStairs = false;
+        }
+    }
     private void CheckRope()
     {
         Vector2 ropePosition = new Vector2(transform.position.x, transform.position.y + 0.5f);
