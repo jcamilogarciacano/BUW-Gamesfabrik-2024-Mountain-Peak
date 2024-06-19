@@ -10,7 +10,7 @@ public class NextFloorSpawner : MonoBehaviour
     public Transform spawnPoint; // Spawn point for the next floor
 
     public Transform towerSpawnPoint; // Spawn point for the next floor
-    float spawnInterval = 4f; // Time interval between spawning next floors
+    float spawnInterval = 60f; // Time interval between spawning next floors
 
     float spawnTowerInterval = 24; // Time interval between spawning next towers
     float timer = 0f; // Timer to keep track of elapsed time
@@ -20,12 +20,13 @@ public class NextFloorSpawner : MonoBehaviour
     float towerTimer = 0f; // Timer to keep track of elapsed time
     // Start is called before the first frame update
 
-    float distanceBetweenFloors = 8f; // Distance between each floor
+    float distanceBetweenFloors = 50f; // Distance between each floor
     void Start()
     {
         SpawnNextFloor();
 
-        SpawnNextTower();
+        if(towers.Length > 0)
+            SpawnNextTower();
     }
 
     // Update is called once per frame
@@ -42,11 +43,14 @@ public class NextFloorSpawner : MonoBehaviour
             timer = 0f; // Reset the timer
         }
 
+        if(towers.Length > 0){
+
           if (towerTimer >= spawnTowerInterval)
             {
                 SpawnNextTower(); // Spawn the next floor
                 towerTimer = 0f; // Reset the timer
             }
+        }
 
         //DespawnPreviousFloors(); // Despawn previous floors after 15 seconds
         //DespawnPreviousTowers(); // Despawn previous floors after 15 seconds
@@ -61,7 +65,7 @@ public class NextFloorSpawner : MonoBehaviour
         foreach (GameObject floor in spawnedFloors)
         {
             // Destroy the floor after 15 seconds
-            Destroy(floor, 120f);
+            Destroy(floor, 240f);
         }
     }
 
@@ -102,7 +106,8 @@ public class NextFloorSpawner : MonoBehaviour
 
 
         // create a temp variable to randomly change the distance for the next floor using the distanceBetweenFloors variable
-        float distance = Random.Range(distanceBetweenFloors - 6f, distanceBetweenFloors);
+        //float distance = Random.Range(distanceBetweenFloors - 6f, distanceBetweenFloors);
+        float distance = distanceBetweenFloors;
         // Update the spawn point for the next floor
         spawnPoint.position += Vector3.up * distance;
     }
@@ -116,6 +121,7 @@ public class NextFloorSpawner : MonoBehaviour
         Instantiate(nextTower, towerSpawnPoint.position, Quaternion.identity);
 
         // Update the spawn point for the next floor
+        
         towerSpawnPoint.position += Vector3.up * 140f;
     }
 }

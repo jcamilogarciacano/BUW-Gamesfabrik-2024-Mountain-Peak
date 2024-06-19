@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6405389209687610527
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2286308090468875539}
+  - component: {fileID: 4034010391041191263}
+  - component: {fileID: 3169717652600740799}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2286308090468875539
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6405389209687610527}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.915076, y: 7.3667374, z: 0.17741401}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4034010391041191263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6405389209687610527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734f464900dd51b4f9954605d8b41392, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextFloors:
+  - {fileID: 1922768880745128401, guid: 0063007cd462ff146bba1ae41f5ed09b, type: 3}
+  - {fileID: 4399356829824040259, guid: 0a1048391cc51134b9f9e20c69667390, type: 3}
+  towers: []
+  spawnPoint: {fileID: 0}
+  towerSpawnPoint: {fileID: 0}
+--- !u!114 &3169717652600740799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6405389209687610527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38aa2273a4f940f46aae8fd8eab0fc6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftSpawnPoint: {fileID: 0}
+  rightSpawnPoint: {fileID: 0}

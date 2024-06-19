@@ -19,8 +19,8 @@ namespace Game.States
         RopeJumping,
         RopeJumpingLeft,
         RunningIn,
-
-        GrapplingGun
+        GrapplingGun,
+        RunningBack
     }
 
 }
@@ -45,6 +45,9 @@ public class Movement2 : MonoBehaviour
     public bool canClimb = false;
 
     public bool canRunInStairs = false;
+    public bool canRunBackStairs = false;
+
+    public bool changingDepth = false;
 
     public PlayerState playerState = PlayerState.Idle;
 
@@ -80,7 +83,9 @@ public class Movement2 : MonoBehaviour
     void Update()
     {
 
-        moveHorizontal = Input.GetAxis("Horizontal");
+        if (playerState != PlayerState.Climbing && changingDepth == false)
+            moveHorizontal = Input.GetAxis("Horizontal");
+
         if (moveHorizontal > 0 && !isFacingRight)
         {
             Flip();
@@ -110,13 +115,33 @@ public class Movement2 : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle && canClimb == false)
+        if (Input.GetButtonDown("Jump") && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.Hanging && playerState != PlayerState.RopeIddle && canClimb == false &&  changingDepth == false)
         {
-            
+
             if (canRunInStairs == true)
             {
-                
-                TransitionToState(PlayerState.RunningIn);
+                if (!isFacingRight)
+                {
+                    Flip();
+                    TransitionToState(PlayerState.RunningIn);
+                }
+                else
+                {
+                    TransitionToState(PlayerState.RunningIn);
+                }
+                //TransitionToState(PlayerState.RunningIn);
+            }
+            else if (canRunBackStairs == true)
+            {
+                if (!isFacingRight)
+                {
+                    Flip();
+                    TransitionToState(PlayerState.RunningBack);
+                }
+                else
+                {
+                    TransitionToState(PlayerState.RunningBack);
+                }
             }
             else
             {
@@ -126,7 +151,7 @@ public class Movement2 : MonoBehaviour
             return;
         }
         //else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
-        else if (Input.GetButtonDown("Jump") && canClimb == true && canRunInStairs == false)
+        else if (Input.GetButtonDown("Jump") && canClimb == true && canRunInStairs == false && canRunBackStairs == false)
         {
             if (!isFacingRight)
             {
@@ -309,7 +334,31 @@ public class Movement2 : MonoBehaviour
             playerState = PlayerState.Falling;
         }
     }
+    public void EndRunningIn()
+    {
+        if (playerState == PlayerState.RunningIn)
+        {
+            playerState = PlayerState.Idle;
+        }
+        // make the character scale smaller
+        transform.localScale = new Vector3(0.8f, 0.8f, 0.5f);
+        floorCheckDistance = 0.8f;
+        changingDepth = false;
+        canRunInStairs = false;
+    }
 
+    public void EndRunningBack()
+    {
+        if (playerState == PlayerState.RunningBack)
+        {
+            playerState = PlayerState.Idle;
+        }
+        // make the character scale smaller
+        transform.localScale = new Vector3(1f, 1f, 0.5f);
+        floorCheckDistance = 0.9f;
+        changingDepth = false;
+        canRunBackStairs = false;
+    }
     public void StartGraplingGun()
     {
         moveHorizontal = 0;
@@ -330,8 +379,6 @@ public class Movement2 : MonoBehaviour
 
     private void CheckWalls()
     {
-
-
     }
     //check ground
     private void CheckGround()
@@ -343,7 +390,7 @@ public class Movement2 : MonoBehaviour
         //Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
         RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.5f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
         float newMoveHori = 0f;
-        if (isFacingRight == false && playerState != PlayerState.RunningIn)
+        if (isFacingRight == false && !changingDepth)
         {
             newMoveHori = -1f;
         }
@@ -368,39 +415,51 @@ public class Movement2 : MonoBehaviour
         #region floor / slopes
         RaycastHit2D hit1 = Physics2D.Raycast(floorPosition, Vector2.right, rayLength, LayerMask.GetMask("Climbable"));
         RaycastHit2D hit2 = Physics2D.Raycast(floorPosition, Vector2.left, rayLength, LayerMask.GetMask("Climbable"));
+        Vector2 floorPositionHelper = new Vector2(transform.position.x, transform.position.y - floorCheckDistance+0.2f);
+        RaycastHit2D floorDetectHelperR = Physics2D.Raycast(floorPositionHelper, Vector2.right, rayLength/4, LayerMask.GetMask("Climbable"));
+        RaycastHit2D floorDetectHelperL = Physics2D.Raycast(floorPositionHelper, Vector2.left, rayLength/4, LayerMask.GetMask("Climbable"));
         Debug.DrawRay(floorPosition, Vector2.right, Color.red, rayLength / 2);
         Debug.DrawRay(floorPosition, Vector2.left, Color.red, rayLength / 2);
 
-        if (hit3.collider == null || hit4.collider == null && playerState != PlayerState.RunningIn)
+        if (hit3.collider == null || hit4.collider == null && !changingDepth)
         {
-            if (hit1.collider != null && hit2.collider != null)
+            print("no wall detected");
+            if (hit1.collider != null && hit2.collider != null && changingDepth == false)
             {
+                print("slope detected");
                 transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);
-                print("inside slope");
+                //print("inside slope");
             }
             else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Walking)
             {
+                print("slope detected2");
                 //transform player Y position up so  the player is not inside the slope
-                transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
-                print(" increase step height on");
+                if(floorDetectHelperR.collider == null || floorDetectHelperL.collider == null)
+                {
+                    transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
+                }
+
+                //print(" increase step height on");
                 slopeSpeed = 1f;
             }
             else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Falling)
             {
+                print("slope detected");
                 playerState = PlayerState.Idle;
                 slopeSpeed = 0f;
             }
             else
-            {
+            {   
+                print("no slope detected");
                 slopeSpeed = 0f;
             }
             #endregion
 
             #region wall 
         }
-        else if (hit3.collider != null || hit4.collider != null && playerState != PlayerState.RunningIn)
+        else if (hit3.collider != null || hit4.collider != null && !changingDepth)
         {
-            print("wall detected???");
+            print("wall detected");
             if (freezePositionSet == false)
             {
                 freezePosition = transform.position;
@@ -419,23 +478,25 @@ public class Movement2 : MonoBehaviour
         if (hit6.collider != null && (playerState == PlayerState.Walking || playerState == PlayerState.Idle))
         {
             canClimb = true;
-            print("climbable wall detected");
+            //print("climbable wall detected");
         }
         else
         {
             canClimb = false;
         }
         #endregion
-
-        if (BoxCast.collider == null && playerState != PlayerState.RunningIn)
+        if (BoxCast.collider == null && !changingDepth)
         {
+            print("no ground detected");
             playerState = PlayerState.Falling;
         }
-        else if (BoxCast.collider != null && playerState != PlayerState.RunningIn)
-        {
+        else if (BoxCast.collider != null && !changingDepth)
+        {   
+            print("ground detected");
             //isGrounded = true;
             playerState = PlayerState.Idle;
         }
+        
     }
     private void CheckLedge()
     {
@@ -467,16 +528,29 @@ public class Movement2 : MonoBehaviour
         RaycastHit2D hit2 = Physics2D.Raycast(ledgePosition, Vector2.up, 1, LayerMask.GetMask("InStairs"));
         Debug.DrawRay(ledgePosition, Vector2.up, Color.yellow, 1);
 
-
-        if (hit2.collider != null)
+        Vector2 ledgePositionDown = new Vector2(transform.position.x, transform.position.y - 0.5f);
+        RaycastHit2D hit3 = Physics2D.Raycast(ledgePositionDown, Vector2.down, 1, LayerMask.GetMask("BackStairs"));
+        Debug.DrawRay(ledgePositionDown, Vector2.down, Color.green, 1);
+        if (hit2.collider != null && hit3.collider == null)
         {
+            print("in stairs detected");
             canRunInStairs = true;
             //playerState = PlayerState.RunningIn;
+            canRunBackStairs = false;
+        }
+        else if (hit3.collider != null && hit2.collider == null)
+        {
+            print("back stairs detected");
+            canRunBackStairs = true;
+            canRunInStairs = false;
+            //playerState = PlayerState.RunningBack;
         }
         else
         {
             canRunInStairs = false;
+            canRunBackStairs = false;
         }
+
     }
     private void CheckRope()
     {
@@ -500,6 +574,10 @@ public class Movement2 : MonoBehaviour
     private void MakeDynamic()
     {
         rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+    private void DepthChange()
+    {
+        changingDepth = true;
     }
 }
 

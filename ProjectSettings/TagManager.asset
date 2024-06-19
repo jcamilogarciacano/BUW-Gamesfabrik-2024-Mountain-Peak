@@ -12,6 +12,8 @@ TagManager:
   - Tower
   - LevelFloor
   - Rock
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX
@@ -24,7 +26,7 @@ TagManager:
   - Rope
   - InStairs
   - Graplabe Surface
-  - 
+  - BackStairs
   - 
   - 
   - 
