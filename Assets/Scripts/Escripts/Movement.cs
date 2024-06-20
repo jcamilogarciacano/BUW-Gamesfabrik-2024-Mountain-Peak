@@ -56,6 +56,7 @@ public class Movement : MonoBehaviour
         }
         if(isHangingOnRope)
         {
+            
             moveHorizontal = 0;
         }
         // Move the player horizontally
