@@ -33,20 +33,20 @@ public class CamZoomController : MonoBehaviour
         {
             zoomedIn = !zoomedIn;
         }
-        timer += Time.deltaTime;
-        if (timer >= switchInterval)
+    /* timer += Time.deltaTime;
+    if (timer >= switchInterval)
+    {
+        zoomedIn = !zoomedIn;
+        if (zoomedIn)
         {
-            zoomedIn = !zoomedIn;
-            if (zoomedIn)
-            {
-                switchInterval = 7f;
-            }
-            else
-            {
-                switchInterval = 8f;
-            }
-            timer = 0f;
+            switchInterval = 7f;
         }
+        else
+        {
+            switchInterval = 8f;
+        }
+        timer = 0f;
+    } */
         // Check for state change and update target size accordingly
         if (zoomedIn)
         {

@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private int currentPositionIndex = 0; // Current position index for camera movement
 
+
     // Update is called once per frame
     void FixedUpdate()
     {

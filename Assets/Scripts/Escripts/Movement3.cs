@@ -61,7 +61,8 @@ public class Movement3 : MonoBehaviour
     public float _moveHorizontal = 0f;
     public float slopeSpeed = 0f;
     float moveHorizontal = 0f;
-
+    float moveVertical = 0f;
+    
     public bool isFacingRight = true;
     Vector3 freezePosition;
 
@@ -78,10 +79,10 @@ public class Movement3 : MonoBehaviour
     void Update()
     {
         // Get the horizontal and vertical input
-        if (playerState != PlayerState.Climbing && changingDepth == false){
+        if (playerState != PlayerState.Climbing && changingDepth == false && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack && playerState != PlayerState.GrapplingGun){
             
             moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
+            moveVertical = Input.GetAxis("Vertical");
         }
         
         // Walking or Idle
@@ -104,7 +105,29 @@ public class Movement3 : MonoBehaviour
         {
             Flip();
         }
-
+        // IF CAN run canRunInStairs = true and move vertical greater than 0 and 
+        // or canRunBackStairs = true and move vertical is less than 0 then run
+        else if (canRunInStairs == true && moveVertical > 0 || canRunBackStairs == true && moveVertical < 0)
+        { 
+            if (canRunInStairs == true && moveVertical > 0)
+            {
+            if (!isFacingRight)
+            {
+                Flip();
+            }
+            //moveHorizontal = 0;
+            TransitionToState(PlayerState.RunningIn);
+            }
+            else if (canRunBackStairs == true && moveVertical < 0)
+            {
+            if (!isFacingRight)
+            {
+                Flip();
+            }
+            //moveHorizontal = 0;
+            TransitionToState(PlayerState.RunningBack);
+            }
+        }
         // Save the horizontal input to use in FixedUpdate
         _moveHorizontal = moveHorizontal;
         
@@ -165,7 +188,8 @@ public class Movement3 : MonoBehaviour
             }
             return;
         }
-/*         else if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal > 0)
+        
+        if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal > 0)
         {
             TransitionToState(PlayerState.RopeJumping);
             return;
@@ -174,7 +198,7 @@ public class Movement3 : MonoBehaviour
         {
             TransitionToState(PlayerState.RopeJumpingLeft);
             return;
-        } */
+        }
 
 
         if (playerState == PlayerState.Falling)
@@ -191,6 +215,7 @@ public class Movement3 : MonoBehaviour
         animator.SetFloat("Speed", Mathf.Abs(moveHorizontal));
         animator.SetInteger("PlayerState", (int)playerState);
         animator.SetFloat("DirectionX", moveHorizontal);
+        animator.SetFloat("DirectionY", moveVertical);
     }
 
     void FixedUpdate()
@@ -234,6 +259,12 @@ public class Movement3 : MonoBehaviour
                 break;
             case PlayerState.RopeJumpingLeft:
                 break;
+            case PlayerState.RunningIn:
+                rb.velocity = new Vector2(0, 0);
+                break;
+            case PlayerState.RunningBack:
+                rb.velocity = new Vector2(0, 0);
+                break;
             default:
                 //  freezePositionSet = false;
                 //change rigidbody to kinematic so the player can walk
@@ -267,6 +298,10 @@ public class Movement3 : MonoBehaviour
     void Flip()
     {
         // Flip the character by multiplying the x component of the localScale by -1
+        if(playerState == PlayerState.RunningIn || playerState == PlayerState.RunningBack)
+        {
+            return;
+        }
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;

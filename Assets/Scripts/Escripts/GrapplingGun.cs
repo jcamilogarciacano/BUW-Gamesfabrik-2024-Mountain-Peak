@@ -65,7 +65,7 @@ public class GrapplingGun : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Mouse0))
         {
-            Movement2 movement = m_rigidbody.gameObject.GetComponent<Movement2>();
+            Movement3 movement = m_rigidbody.gameObject.GetComponent<Movement3>();
             
             //get movement script from player and ask if the player is climbing
             // if the player is climbing, disable grapple rope and springjoint and set gravity to 1]
@@ -106,7 +106,7 @@ public class GrapplingGun : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            Movement2 movement = m_rigidbody.gameObject.GetComponent<Movement2>();
+            Movement3 movement = m_rigidbody.gameObject.GetComponent<Movement3>();
 
             movement.isHangingOnRope = false;
             grappleRope.enabled = false;
