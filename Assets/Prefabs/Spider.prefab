@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1409613170889384149}
   - component: {fileID: 1572141149161605210}
-  - component: {fileID: 4680106589969043622}
   - component: {fileID: 2967838522413065102}
   - component: {fileID: 8333615043350581235}
+  - component: {fileID: 3329660295152192057}
   m_Layer: 0
   m_Name: Spider
   m_TagString: Untagged
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: -665271119
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: -183740077, guid: 5f4248ac01a68084ba3d20d93a66eb32, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f483965b57f20bb479dc31d4fb0a5771, type: 3}
   m_Color: {r: 0.5188679, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -87,28 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4680106589969043622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647294339877515658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50db726b9a495b2439339a2b5feb53de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  webPrefab: {fileID: 7930985215551111766, guid: 709216e90cc71574e9556144b8e6af2a, type: 3}
-  player: {fileID: 0}
-  shootInterval: 3
-  shootDuration: 15
-  waitTime: 5
-  leftSpawnPoint: {fileID: 0}
-  rightSpawnPoint: {fileID: 0}
-  moveSpeed: 4
-  projectileSpeed: 15
-  rotateSpeed: 30
 --- !u!60 &2967838522413065102
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -144,8 +122,8 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10.8, y: 12.09}
+    pivot: {x: 0.62801206, y: 0.66900945}
+    oldSize: {x: 19.2, y: 10.8}
     newSize: {x: 10.8, y: 13.96}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -620,3 +598,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3329660295152192057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647294339877515658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ffa4a6deb643d4698fd08959386e0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webPrefab: {fileID: 7930985215551111766, guid: 709216e90cc71574e9556144b8e6af2a, type: 3}
+  player: {fileID: 0}
+  shootInterval: 2
+  shootDuration: 5
+  waitTime: 3
