@@ -26,11 +26,11 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: fa917f81cd8ed2643a15f42497f530c8, type: 3}
     - target: {fileID: 4492562197373094729, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15
+      value: 7.22
       objectReference: {fileID: 0}
     - target: {fileID: 4492562197373094729, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -15
+      value: 24.8
       objectReference: {fileID: 0}
     - target: {fileID: 4492562197373094729, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Final Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8195195612318946202, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1614455610118550881, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
     m_RemovedGameObjects: []
@@ -95,9 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  jumpForce: 0.2
-  fallSpeed: 2
-  dashSpeed: 5
+  initialSpeed: 0
+  jumpForce: 0.1
+  fallSpeed: 3
+  dashSpeed: 1
   climbingSpeed: 0.1
   rayLength: 0.3
   canClimb: 0
