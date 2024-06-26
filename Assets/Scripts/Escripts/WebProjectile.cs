@@ -80,7 +80,7 @@ public class WebProjectile : MonoBehaviour
      {
 //transform.position += SetDirectionToPlayer() * SPEED * Time.deltaTime;
 //rotate the prefab 1  degree per second continuously
-            transform.Rotate(new Vector3(0, 0, 1) * Time.deltaTime * 360);
+            // transform.Rotate(new Vector3(0, 0, 1) * Time.deltaTime * 360);
      }
 
     // private void OnTriggerEnter2D(Collider2D collision)
