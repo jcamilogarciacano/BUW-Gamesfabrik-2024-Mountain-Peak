@@ -271,12 +271,15 @@ public class Movement3 : MonoBehaviour
                 break;
             case PlayerState.DashingLeft:
                 // Dash left logic here
+                //change layer to ignore collision with the webs
+                gameObject.layer = 0;
                 //add force to the left
                 rb.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
                 break;
             case PlayerState.DashingRight:
                 // Dash right logic here
+                gameObject.layer = 0;
                 //add force to the right
                 rb.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
@@ -348,7 +351,7 @@ public class Movement3 : MonoBehaviour
         isFacingRight = !isFacingRight;
     }
 
-    public void EndDashingLeft()
+    public void EndDashingLeft() // obsolete
     {
         if (playerState == PlayerState.DashingLeft)
         {
@@ -360,6 +363,8 @@ public class Movement3 : MonoBehaviour
     {
         if (playerState == PlayerState.DashingRight || playerState == PlayerState.DashingLeft)
         {
+            //return layer to player
+            gameObject.layer = 3;
             playerState = PlayerState.Idle;
         }
     }
