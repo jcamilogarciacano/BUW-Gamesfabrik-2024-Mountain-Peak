@@ -51,6 +51,8 @@ public class WebSplash : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
+            player.GetComponent<Movement3>().SetWebTrapped();
+            //player.GetComponent<Movement3>().enabled = false;
         }
     }
 
@@ -60,6 +62,8 @@ public class WebSplash : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            //player.GetComponent<Movement3>().enabled = true;
+            player.GetComponent<Movement3>().UnSetWebTrapped(); 
         }
     }
     

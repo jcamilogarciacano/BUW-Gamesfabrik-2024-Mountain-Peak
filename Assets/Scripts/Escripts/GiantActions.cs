@@ -22,8 +22,8 @@ public class GiantActions : MonoBehaviour
     {
         //use gameobject .find to find the objecst with tag "Player", "LeftPoint" and "RightPoint"
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        leftPoint = GameObject.FindGameObjectWithTag("Left").transform;
-        rightPoint = GameObject.FindGameObjectWithTag("Right").transform;
+        //leftPoint = GameObject.FindGameObjectWithTag("Left").transform;
+        //rightPoint = GameObject.FindGameObjectWithTag("Right").transform;
     }
     // void Update()
     // {

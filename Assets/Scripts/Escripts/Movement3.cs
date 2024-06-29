@@ -17,7 +17,10 @@ public enum PlayerState
     RopeJumpingLeft,
     RunningIn,
     GrapplingGun,
-    RunningBack
+    RunningBack,
+    WebTrapped,
+    RockHitted,
+    RockWakingUp
 }
 public class Movement3 : MonoBehaviour
 {
@@ -69,11 +72,30 @@ public class Movement3 : MonoBehaviour
 
     bool freezePositionSet = false;
 
+    private bool isDelayedFallingInvoked = false;
+
     public bool isHangingOnRope = false;
+
+    public float fallingSpeedThreshold = -0.5f; // Define a threshold for falling speed
+
+    // Add maximum dashing time variable
+    public float maxDashTime = 2.0f; // Maximum time the player can dash
+    private float currentDashTimeLeft = 0f; // Current dashing time left
+    private float currentDashTimeRight = 0f; // Current dashing time right
+    public float verticalSpeed = 0f;
+
+    private bool isDashingLeft = false;
+    private bool isDashingRight = false;
+
+    public AnimationClip newWalkingClip; // Assign this in the Inspector
+    public AnimationClip oldWalkingClip; // Assign this in the Inspector
+    public AnimatorOverrideController animatorOverrideController;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = animatorOverrideController;
         spriteRenderer = GetComponent<SpriteRenderer>();
         initialSpeed = speed;
     }
@@ -89,38 +111,73 @@ public class Movement3 : MonoBehaviour
         }
         if (Input.GetButton("Running") && playerState != PlayerState.Falling && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack)
         {
-            print("running");
+            print("runninggg");
+             ChangeWalkingAnimationClip();
             speed = initialSpeed * 2;
         }
         else
         {
-            print("not running");
+            print("not runningmiu");
+             ChangeWalkingAnimationClipBack();
             speed = initialSpeed;
         }
 
-        if (Input.GetButtonDown("DashLeft") && (playerState == PlayerState.Idle || playerState == PlayerState.Walking))
+        if (Input.GetButtonDown("DashLeft"))
         {
-            TransitionToState(PlayerState.DashingLeft);
-            return;
+            if ((playerState == PlayerState.Idle || playerState == PlayerState.Walking) && currentDashTimeLeft < maxDashTime)
+            {
+                if (!isDashingLeft) // Start dashing
+                {
+                    TransitionToState(PlayerState.DashingLeft);
+                    currentDashTimeLeft = maxDashTime; // Reset dashing time
+                }
+                else // Continue dashing
+                {
+                    currentDashTimeLeft -= Time.deltaTime;
+                    rb.AddForce(Vector2.left * dashSpeed, ForceMode2D.Force);
+                }
+            }
+        }
+        else
+        {
+            currentDashTimeLeft = 0; // Reset dashing time when button released
+            isDashingLeft = false;
         }
 
-        if (Input.GetButtonDown("DashRight") && (playerState == PlayerState.Idle || playerState == PlayerState.Walking))
+        if (Input.GetButtonDown("DashRight"))
         {
-            TransitionToState(PlayerState.DashingRight);
-            return;
+            if ((playerState == PlayerState.Idle || playerState == PlayerState.Walking) && currentDashTimeRight < maxDashTime)
+            {
+                if (!isDashingRight) // Start dashing
+                {
+                    TransitionToState(PlayerState.DashingRight);
+                    currentDashTimeRight = maxDashTime; // Reset dashing time
+                }
+                else // Continue dashing
+                {
+                    currentDashTimeRight -= Time.deltaTime;
+                    rb.AddForce(Vector2.right * dashSpeed, ForceMode2D.Force);
+                }
+            }
+        }
+        else
+        {
+            currentDashTimeRight = 0; // Reset dashing time when button released
+            isDashingRight = false;
         }
 
         // Walking or Idle
         if (moveHorizontal != 0 && playerState == PlayerState.Idle && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack)
         {
-            if(Input.GetButtonUp("Running")){
-            speed = initialSpeed;
+            if (Input.GetButtonUp("Running"))
+            {
+                speed = initialSpeed;
             }
             print("walking???");
             TransitionToState(PlayerState.Walking);
             //spriteRenderer.flipX = moveHorizontal < 0;
         }
-        if (moveHorizontal == 0 && playerState == PlayerState.Walking && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack)
+        if (moveHorizontal == 0 && playerState == PlayerState.Walking && playerState != PlayerState.Jumping && playerState != PlayerState.Falling && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp)
         {
             print("idleeeee");
             speed = initialSpeed;
@@ -204,7 +261,7 @@ public class Movement3 : MonoBehaviour
                     return;
                 } */
         //else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
-        if (Input.GetButtonDown("Climb") && canClimb == true)
+        if (Input.GetButtonDown("Climb") && canClimb == true && playerState != PlayerState.WebTrapped)
         {
             if (!isFacingRight)
             {
@@ -233,9 +290,14 @@ public class Movement3 : MonoBehaviour
 
         if (playerState == PlayerState.Falling)
         {
+            print("falling from update");
             //         CheckGround();
             CheckLedge();
             CheckRope();
+            if (verticalSpeed == 0) // wanting to stop falling and iddle states to switch between continiously
+            {
+                //playerState = PlayerState.Idle;
+            }
         }
 
         if (isHangingOnRope == true)
@@ -246,6 +308,8 @@ public class Movement3 : MonoBehaviour
         animator.SetInteger("PlayerState", (int)playerState);
         animator.SetFloat("DirectionX", moveHorizontal);
         animator.SetFloat("DirectionY", moveVertical);
+        //get the vertical speed and assign it to the animator variable
+        animator.SetFloat("VerticalSpeed", rb.velocity.y);
     }
 
     void FixedUpdate()
@@ -274,19 +338,23 @@ public class Movement3 : MonoBehaviour
                 //change layer to ignore collision with the webs
                 gameObject.layer = 0;
                 //add force to the left
-                rb.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+                // rb.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
+                //rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
                 break;
             case PlayerState.DashingRight:
                 // Dash right logic here
                 gameObject.layer = 0;
                 //add force to the right
-                rb.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+                //rb.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
+                //rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
                 break;
             case PlayerState.Falling:
                 //rb.bodyType = RigidbodyType2D.Dynamic;
-                transform.position = new Vector2(transform.position.x, transform.position.y - 0.05f);
+                print("falling from fixed update case");
+                if (rb.velocity.y < fallingSpeedThreshold)
+                {
+                    transform.position = new Vector2(transform.position.x, transform.position.y - 0.05f);
+                }
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), -fallSpeed);
                 break;
             case PlayerState.Hanging:
@@ -307,6 +375,9 @@ public class Movement3 : MonoBehaviour
             case PlayerState.RunningBack:
                 rb.velocity = new Vector2(0, 0);
                 break;
+            case PlayerState.WebTrapped:
+
+                break;
             default:
                 //  freezePositionSet = false;
                 //change rigidbody to kinematic so the player can walk
@@ -314,7 +385,8 @@ public class Movement3 : MonoBehaviour
                 CheckStairs();
                 //rb.bodyType = RigidbodyType2D.Dynamic;
                 print("default");
-                //rb.velocity = new Vector2(0, 0);
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+                gameObject.layer = 3;
                 break;
         }
     }
@@ -364,9 +436,11 @@ public class Movement3 : MonoBehaviour
         if (playerState == PlayerState.DashingRight || playerState == PlayerState.DashingLeft)
         {
             //return layer to player
-            gameObject.layer = 3;
+            isDashingLeft = false;
+            isDashingRight = false;
             playerState = PlayerState.Idle;
         }
+        gameObject.layer = 3;
     }
 
     public void EndFalling()
@@ -464,7 +538,7 @@ public class Movement3 : MonoBehaviour
         floorPosition = new Vector2(transform.position.x, transform.position.y - floorCheckDistance);
         //RaycastHit2D hit = Physics2D.Raycast(floorPosition, Vector2.down, rayLength, LayerMask.GetMask("Climbable"));
         //Debug.DrawRay(floorPosition, Vector2.down, Color.red, rayLength);
-        RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.5f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
+        RaycastHit2D BoxCast = Physics2D.BoxCast(floorPosition, new Vector2(0.45f, 0.1f), 0, Vector2.down, 0, LayerMask.GetMask("Climbable"));
         float newMoveHori = 0f;
         if (isFacingRight == false && !changingDepth)
         {
@@ -514,15 +588,20 @@ public class Movement3 : MonoBehaviour
                 {
                     //transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
                 }
-
+                print("i think im walking but not really");
                 //print(" increase step height on");
                 slopeSpeed = 1f;
             }
-            else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Falling)
+            else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Falling && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp)
             {
                 //  print("slope detected");
+                print("slope detectedgrrrrrrrrrrr");
                 playerState = PlayerState.Idle;
                 slopeSpeed = 0f;
+            }
+            else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.RockHitted)
+            {
+                playerState = PlayerState.RockWakingUp;
             }
             else
             {
@@ -564,14 +643,32 @@ public class Movement3 : MonoBehaviour
         if (BoxCast.collider == null && !changingDepth)
         {
             //  print("no ground detected");
-
-            playerState = PlayerState.Falling;
+            if (playerState != PlayerState.RockHitted)
+            {
+                print("falling AAAAAAAAAA");
+                playerState = PlayerState.Falling;
+            }
+            else if (playerState == PlayerState.RockHitted)
+            {
+                //call the delayed function with invoke so we wait some seconds before dropping the player to falling state
+                if (!isDelayedFallingInvoked)
+                {
+                    Invoke("DelayedFalling", 1f);
+                    isDelayedFallingInvoked = true;
+                }
+            }
         }
-        else if (BoxCast.collider != null && !changingDepth)
+        else if (BoxCast.collider != null && !changingDepth && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp)
         {
             //  print("ground detected");
+            print("NOT FALLING AAAAAAAAAA");
             //isGrounded = true;
             playerState = PlayerState.Idle;
+        }
+        else if (BoxCast.collider != null && playerState == PlayerState.RockHitted)
+        {
+            print("waking up from rock hit");
+            playerState = PlayerState.RockWakingUp;
         }
 
     }
@@ -656,5 +753,64 @@ public class Movement3 : MonoBehaviour
     {
         changingDepth = true;
     }
+
+    public void SetWebTrapped()
+    {
+        if (playerState != PlayerState.RunningBack || playerState != PlayerState.RunningIn)
+        {
+            playerState = PlayerState.WebTrapped;
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+    }
+    public void UnSetWebTrapped()
+    {
+        if (playerState == PlayerState.WebTrapped)
+        {
+            playerState = PlayerState.Idle;
+        }
+    }
+
+    public void SetRockHitted()
+    {
+        if (playerState != PlayerState.RunningBack || playerState != PlayerState.RunningIn && playerState != PlayerState.RockWakingUp)
+        {
+            playerState = PlayerState.RockHitted;
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+    }
+    public void FinishWakingUp()
+    {
+        if (playerState == PlayerState.RockWakingUp)
+        {
+            playerState = PlayerState.Idle;
+        }
+    }
+
+    //create a function to call it with invoke so we wait some seconds before dropping the player to falling state
+    private void DelayedFalling()
+    {
+        print("delaying my fall with delay");
+        playerState = PlayerState.Falling;
+        isDelayedFallingInvoked = false;
+    }
+
+    void ChangeWalkingAnimationClip()
+    {
+        // IMPORTANT , It cares about the name of the clip, not the state name
+        // Replace the walking clip with the new clip
+        animatorOverrideController["SideWalkLast"] = newWalkingClip; // "Walking" is the name of the original clip in the Animator
+    }
+    void ChangeWalkingAnimationClipBack()
+    {
+        // Replace the walking clip with the new clip
+        animatorOverrideController["running_last_animatronik"] = oldWalkingClip; // "Walking" is the name of the original clip in the Animator
+    }
+
 }
 
