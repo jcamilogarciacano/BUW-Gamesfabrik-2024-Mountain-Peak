@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5050787425782036209}
   - component: {fileID: 7040836570910639466}
   - component: {fileID: 3217948803232862457}
+  - component: {fileID: 5391332322555678693}
   m_Layer: 0
   m_Name: Giant
   m_TagString: Untagged
@@ -138,3 +139,24 @@ MonoBehaviour:
   throwOffset: {x: 0, y: 1, z: 0}
   numberOfRocks: 5
   rockSizeRange: {x: 0.5, y: 1.5}
+--- !u!95 &5391332322555678693
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51168249100131665}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: eacd49d3eae5adc43957b7e67b4874f8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

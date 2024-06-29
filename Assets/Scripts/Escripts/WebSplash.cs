@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WebSplash : MonoBehaviour
 {
+    public float unfreezeTimer = 3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +31,7 @@ public class WebSplash : MonoBehaviour
             // Freeze the player
             FreezePlayer(collision.gameObject);
             // Unfreeze the player after 5 seconds
-            StartCoroutine(UnfreezePlayerAfterDelay(collision.gameObject, 5f));
+            StartCoroutine(UnfreezePlayerAfterDelay(collision.gameObject, unfreezeTimer));
         }
     }
     

@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: jumping_Dynamic_last
+  m_Name: attacking
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,23 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 96ac93727d1413d408155c06e7c4eda6, type: 3}
+      value: {fileID: 21300000, guid: 501b4c0a1b1dea94d9a1ae8433d305d8, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: dd7279d37f39b9b42a52debef1303f71, type: 3}
+      value: {fileID: 21300000, guid: 0179bb7e7b9b02946a82b43560ef585a, type: 3}
     - time: 0.16666667
-      value: {fileID: 21300000, guid: 9139396febdd85443a91e2be27e0177c, type: 3}
+      value: {fileID: 21300000, guid: 9dbdb84c92af69844a42c8fddf1aae2a, type: 3}
     - time: 0.25
-      value: {fileID: 21300000, guid: c10de584b06d1b64fbe21abffa4a1180, type: 3}
+      value: {fileID: 21300000, guid: 306a37d21c7d8064bbb5590765185304, type: 3}
+    - time: 0.33333334
+      value: {fileID: 21300000, guid: bf22aff51d95012409a57b1c2f8e7432, type: 3}
+    - time: 0.41666666
+      value: {fileID: 21300000, guid: 9ad71e037c4a8d048a58f67ebbed6fc8, type: 3}
+    - time: 0.5
+      value: {fileID: 21300000, guid: e245096873b2b3645be599a7d82b0c72, type: 3}
+    - time: 0.5833333
+      value: {fileID: 21300000, guid: 4b7c77ad95f15044fa89788bc353960b, type: 3}
+    - time: 0.6666667
+      value: {fileID: 21300000, guid: 8aaba56a95620114daf162e3406c6169, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -50,16 +60,21 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 96ac93727d1413d408155c06e7c4eda6, type: 3}
-    - {fileID: 21300000, guid: dd7279d37f39b9b42a52debef1303f71, type: 3}
-    - {fileID: 21300000, guid: 9139396febdd85443a91e2be27e0177c, type: 3}
-    - {fileID: 21300000, guid: c10de584b06d1b64fbe21abffa4a1180, type: 3}
+    - {fileID: 21300000, guid: 501b4c0a1b1dea94d9a1ae8433d305d8, type: 3}
+    - {fileID: 21300000, guid: 0179bb7e7b9b02946a82b43560ef585a, type: 3}
+    - {fileID: 21300000, guid: 9dbdb84c92af69844a42c8fddf1aae2a, type: 3}
+    - {fileID: 21300000, guid: 306a37d21c7d8064bbb5590765185304, type: 3}
+    - {fileID: 21300000, guid: bf22aff51d95012409a57b1c2f8e7432, type: 3}
+    - {fileID: 21300000, guid: 9ad71e037c4a8d048a58f67ebbed6fc8, type: 3}
+    - {fileID: 21300000, guid: e245096873b2b3645be599a7d82b0c72, type: 3}
+    - {fileID: 21300000, guid: 4b7c77ad95f15044fa89788bc353960b, type: 3}
+    - {fileID: 21300000, guid: 8aaba56a95620114daf162e3406c6169, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.33333334
+    m_StopTime: 0.75
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -78,18 +93,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0.25
-    functionName: CheckGround
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.25
-    functionName: EndJumping
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []

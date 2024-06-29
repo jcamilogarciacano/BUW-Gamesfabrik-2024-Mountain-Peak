@@ -613,5 +613,5 @@ MonoBehaviour:
   webPrefab: {fileID: 7930985215551111766, guid: 709216e90cc71574e9556144b8e6af2a, type: 3}
   player: {fileID: 0}
   shootInterval: 2
-  shootDuration: 5
   waitTime: 3
+  startShooting: 0

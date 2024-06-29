@@ -18,10 +18,13 @@ public class GiantActions : MonoBehaviour
     private bool isVisible = true; // Whether the giant is currently visible
     private float nextThrowTime = 0.0f; // Time when the giant can throw the next rock
 
+    public Animator animator;   
+
     void Awake()
     {
         //use gameobject .find to find the objecst with tag "Player", "LeftPoint" and "RightPoint"
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        animator = GetComponent<Animator>();
         //leftPoint = GameObject.FindGameObjectWithTag("Left").transform;
         //rightPoint = GameObject.FindGameObjectWithTag("Right").transform;
     }
@@ -86,6 +89,7 @@ public class GiantActions : MonoBehaviour
             {
                 ThrowRocks();
                 nextThrowTime = Time.time + throwInterval;
+                 animator.SetTrigger("Attack");
             }
         }
         else if (isAwake)
