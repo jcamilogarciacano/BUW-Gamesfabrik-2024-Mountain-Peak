@@ -973,7 +973,7 @@ Transform:
   m_GameObject: {fileID: 3532852666227710665}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 22.719997, y: 11.559999, z: 0}
+  m_LocalPosition: {x: 24.469997, y: 11.559999, z: 0}
   m_LocalScale: {x: 1.2563, y: 1.2563, z: 1.2563}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3488,7 +3488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7524751395278923816, guid: 2999d4110e977804dbf43fe83ab26cd8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.85
+      value: 0.91494536
       objectReference: {fileID: 0}
     - target: {fileID: 7524751395278923816, guid: 2999d4110e977804dbf43fe83ab26cd8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3496,7 +3496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7524751395278923816, guid: 2999d4110e977804dbf43fe83ab26cd8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.4
+      value: 17.88
       objectReference: {fileID: 0}
     - target: {fileID: 7524751395278923816, guid: 2999d4110e977804dbf43fe83ab26cd8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5217,20 +5217,24 @@ PrefabInstance:
       value: Giant (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
+      propertyPath: throwForce
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: numberOfRocks
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: throwInterval
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: detectionRadius
-      value: 12
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4172614700451559959, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 22.46
+      value: 24.21
       objectReference: {fileID: 0}
     - target: {fileID: 4172614700451559959, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5840,6 +5844,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 20.85
       objectReference: {fileID: 0}
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: waitTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3306008535308713312, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: waitTime
       value: 4
@@ -5866,7 +5874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5208389644158883320, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: m_Size.x
-      value: 21.864319
+      value: 24.428198
       objectReference: {fileID: 0}
     - target: {fileID: 5208389644158883320, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: m_Size.y
@@ -5874,7 +5882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5208389644158883320, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: m_Offset.x
-      value: -4.0702896
+      value: -5.352227
       objectReference: {fileID: 0}
     - target: {fileID: 5208389644158883320, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: m_Offset.y
@@ -8144,6 +8152,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2850518426245588819}
     m_Modifications:
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: waitTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: shootInterval
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5208389644158883320, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: m_Size.x
       value: 14.551596

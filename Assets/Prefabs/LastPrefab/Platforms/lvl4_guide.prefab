@@ -427,8 +427,16 @@ PrefabInstance:
       value: 20.85
       objectReference: {fileID: 0}
     - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: waitTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: rotationSpeed
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: shootInterval
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5208389644158883320, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: m_Size.x
@@ -1342,6 +1350,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 5.11
       objectReference: {fileID: 0}
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: waitTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
+      propertyPath: shootInterval
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3306008535308713312, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: waitTime
       value: 2
@@ -1746,7 +1762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: waitTime
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2870586335317520890, guid: 88952f9c66e7a2a4c96755857edd8179, type: 3}
       propertyPath: shootInterval
@@ -2681,6 +2697,14 @@ PrefabInstance:
     - target: {fileID: 51168249100131665, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: m_Name
       value: Giant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
+      propertyPath: numberOfRocks
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
+      propertyPath: throwInterval
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3217948803232862457, guid: bef341337a510854db1cdeee1d499740, type: 3}
       propertyPath: detectionRadius
@@ -4204,11 +4228,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4054579615340720230, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
-      value: -263616
+      value: -220276
       objectReference: {fileID: 0}
     - target: {fileID: 4710487164322555738, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
-      value: -263524
+      value: -220184
       objectReference: {fileID: 0}
     - target: {fileID: 6449075540964541100, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
@@ -4220,7 +4244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8920471863308619696, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
-      value: -263608
+      value: -220268
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5959,8 +5983,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 5662720630413590977}
     m_Modifications:
     - target: {fileID: 2674734235956593109, guid: 202c93b519513234d8e8d555a78e196f, type: 3}
+      propertyPath: m_Size.x
+      value: 0.9814286
+      objectReference: {fileID: 0}
+    - target: {fileID: 2674734235956593109, guid: 202c93b519513234d8e8d555a78e196f, type: 3}
+      propertyPath: m_Size.y
+      value: 0.9858537
+      objectReference: {fileID: 0}
+    - target: {fileID: 2674734235956593109, guid: 202c93b519513234d8e8d555a78e196f, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.009285688
+      objectReference: {fileID: 0}
+    - target: {fileID: 2674734235956593109, guid: 202c93b519513234d8e8d555a78e196f, type: 3}
       propertyPath: m_Offset.y
-      value: 0.44
+      value: -0.0029268265
       objectReference: {fileID: 0}
     - target: {fileID: 3439773868746654657, guid: 202c93b519513234d8e8d555a78e196f, type: 3}
       propertyPath: m_Name
