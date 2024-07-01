@@ -21,7 +21,8 @@ public enum PlayerState
     WebTrapped,
     RockHitted,
     RockWakingUp,
-    Running
+    Running,
+    RopeClimbing
 }
 public class Movement3 : MonoBehaviour
 {
@@ -112,7 +113,7 @@ public class Movement3 : MonoBehaviour
             moveHorizontal = Input.GetAxis("Horizontal");
             moveVertical = Input.GetAxis("Vertical");
         }
-        if (Input.GetButton("Running") && playerState != PlayerState.Falling && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack && moveHorizontal != 0 && playerState != PlayerState.Jumping && playerState != PlayerState.Climbing)
+        if (Input.GetButton("Running") && playerState != PlayerState.Falling && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack && moveHorizontal != 0 && playerState != PlayerState.Jumping && playerState != PlayerState.Climbing && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp && playerState != PlayerState.GrapplingGun  && playerState != PlayerState.RopeClimbing)
         {
             print("runninggg");
             TransitionToState(PlayerState.Running);
@@ -310,15 +311,21 @@ public class Movement3 : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal > 0)
+        if (Input.GetButtonDown("Jump") && moveHorizontal > 0)
         {
-            TransitionToState(PlayerState.RopeJumping);
-            return;
+            if (playerState == PlayerState.RopeIddle || playerState == PlayerState.RopeClimbing)
+            {
+                TransitionToState(PlayerState.RopeJumping);
+                return;
+            }
         }
-        else if (Input.GetButtonDown("Jump") && playerState == PlayerState.RopeIddle && moveHorizontal < 0)
+        else if (Input.GetButtonDown("Jump") && moveHorizontal < 0)
         {
-            TransitionToState(PlayerState.RopeJumpingLeft);
-            return;
+            if (playerState == PlayerState.RopeIddle || playerState == PlayerState.RopeClimbing)
+            {
+                TransitionToState(PlayerState.RopeJumpingLeft);
+                return;
+            }
         }
 
 
@@ -413,7 +420,20 @@ public class Movement3 : MonoBehaviour
                 CheckLedge();
                 break;
             case PlayerState.RopeIddle:
-                rb.velocity = new Vector2(0, speed * Input.GetAxis("Vertical"));
+                //rb.velocity = new Vector2(0, speed * Input.GetAxis("Vertical"));
+                if (Input.GetAxis("Vertical") != 0)
+                {
+                    TransitionToState(PlayerState.RopeClimbing);
+                }
+                break;
+            case PlayerState.RopeClimbing:
+                speed = initialSpeed;
+                rb.velocity = new Vector2(0, (speed/2) * Input.GetAxis("Vertical"));
+                if (Input.GetAxis("Vertical") == 0)
+                {
+                    TransitionToState(PlayerState.RopeIddle);
+                }
+                
                 break;
             case PlayerState.RopeJumping:
                 break;
@@ -435,7 +455,7 @@ public class Movement3 : MonoBehaviour
                 CheckStairs();
                 //rb.bodyType = RigidbodyType2D.Dynamic;
                 print("default");
-                rb.velocity = new Vector2(rb.velocity.x,0);
+                rb.velocity = new Vector2(rb.velocity.x, 0);
                 gameObject.layer = 3;
                 break;
         }
@@ -764,13 +784,16 @@ public class Movement3 : MonoBehaviour
         Vector2 ropePosition = new Vector2(transform.position.x, transform.position.y + 0.5f);
         RaycastHit2D hit5 = Physics2D.Raycast(ropePosition, Vector2.up, rayLength, LayerMask.GetMask("Rope"));
         Debug.DrawRay(ropePosition, Vector2.up, Color.green, rayLength);
-        if (hit5.collider != null)
+        if (hit5.collider != null && playerState != PlayerState.RopeClimbing)
         {
             playerState = PlayerState.RopeIddle;
         }
-        else if (hit5.collider == null && playerState == PlayerState.RopeIddle)
+        else if (hit5.collider == null)
         {
-            playerState = PlayerState.Falling;
+            if(playerState == PlayerState.RopeIddle || playerState == PlayerState.RopeClimbing)
+            {
+                playerState = PlayerState.Falling;
+            }
         }
     }
 

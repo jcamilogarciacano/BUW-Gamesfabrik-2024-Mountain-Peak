@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ce33ae5509a66a4409c89dd9ebf3c447, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -139,6 +139,7 @@ MonoBehaviour:
   throwOffset: {x: 0, y: 1, z: 0}
   numberOfRocks: 5
   rockSizeRange: {x: 0.5, y: 1.5}
+  animator: {fileID: 0}
 --- !u!95 &5391332322555678693
 Animator:
   serializedVersion: 5

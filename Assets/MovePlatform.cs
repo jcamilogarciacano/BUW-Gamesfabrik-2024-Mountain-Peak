@@ -17,15 +17,26 @@ public class MovePlatform : MonoBehaviour
     public float moveSpeed; // Speed of movement
     public float waitTime; // Time to wait between movements
 
+    public float moveThreshold = 0.1f; // Threshold to consider the platform at the destination
     private Vector3 initialPosition;
     private bool movingOutward = true; // Tracks whether the platform is moving out from the initial position or back to it
 
     public bool considerInitialPos; // Whether to consider the initial position as the starting point
     private float timer;
 
+    private SpiderController2 spiderController2;
+
     // Start is called before the first frame update
     void Start()
     {
+        try
+        {
+            spiderController2 = GetComponent<SpiderController2>();
+        }
+        catch (System.Exception)
+        {
+            spiderController2 = null;
+        }
         initialPosition = transform.position;
         timer = waitTime;
     }
@@ -51,16 +62,16 @@ public class MovePlatform : MonoBehaviour
                     moveVector = movingOutward ? Vector3.down : Vector3.up;
                     break;
             }
-
+            
             transform.Translate(moveVector * moveSpeed * Time.deltaTime);
-
+            spiderController2?.animator.SetBool("isRotating", true);
             if (Mathf.Abs(Vector3.Distance(transform.position, initialPosition)) >= moveDistance)
             {
                 // Only reverse direction if moving outward and the platform has reached the moveDistance
                 movingOutward = !movingOutward; // Now moving inward
                 timer = waitTime; // Reset the timer
             }
-            else if (considerInitialPos && Vector3.Distance(transform.position, initialPosition) < 0.1f && !movingOutward)
+            else if (considerInitialPos && Vector3.Distance(transform.position, initialPosition) < moveThreshold && !movingOutward)
             {
                 // Only reverse direction if considering initial position, close to initial position, and currently moving inward
                 movingOutward = true; // Now moving outward

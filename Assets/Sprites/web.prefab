@@ -129,7 +129,7 @@ MonoBehaviour:
   speed: 10
   rb: {fileID: 64555255917885685}
   webSplashPrefab: {fileID: 7930985215551111766, guid: cbb19c81b583f914dbb4d045b21e3757, type: 3}
-  webSplashDuration: 5
+  webSplashDuration: 3
 --- !u!58 &2098881556899245555
 CircleCollider2D:
   m_ObjectHideFlags: 0

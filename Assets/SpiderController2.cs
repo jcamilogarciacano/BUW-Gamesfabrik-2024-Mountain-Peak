@@ -10,17 +10,22 @@ public class SpiderController2 : MonoBehaviour
     //public float shootDuration = 5.0f; // Duration of the shooting phase
     public float waitTime = 3.0f; // Time to wait before respawning
 
-    private float shootTimer; // Timer for shooting
-    private float waitTimer; // Timer for waiting
+    public float shootTimer; // Timer for shooting
+    public float waitTimer; // Timer for waiting
 
     public bool startShooting = false; // Whether the spider should start shooting
 
     public float rotationSpeed = 5f; // Example value, adjust as needed
+
+    public float rotationThreshold = 1f; // Example value, adjust as needed
     public Animator animator;
+
+    public SpiderDetectionHelper detectionHelperCollider;
 
     // Start is called before the first frame update
     void Start()
     {
+        //detectionHelperCollider = GetComponentInChildren<SpiderDetectionHelper>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         shootTimer = shootInterval; // Start shooting immediately
@@ -30,9 +35,14 @@ public class SpiderController2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LookAtPlayer(); // Look at the player during shooting phase
+        if (detectionHelperCollider != null)
+        {
+            startShooting = detectionHelperCollider.startShooting;
+        }
+        
         if (startShooting)
         {
+            LookAtPlayer(); // Look at the player during shooting phase
             if (waitTimer > 0.0f)
             {
                 waitTimer -= Time.deltaTime;
@@ -58,6 +68,10 @@ public class SpiderController2 : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            animator.SetBool("isRotating", false); // Set the animator bool to false if not rotating
+        }
     }
 
     // Look at player function
@@ -75,7 +89,7 @@ public class SpiderController2 : MonoBehaviour
 
         // Check if the spider is changing the rotation and set the animator bool to true
         // This part might need adjustment based on your specific requirements
-        if (Quaternion.Angle(transform.rotation, targetRotation) > 1) // Using a threshold to check if rotation is significant
+        if (Quaternion.Angle(transform.rotation, targetRotation) > rotationThreshold) // Using a threshold to check if rotation is significant
         {
             animator.SetBool("isRotating", true);
         }
@@ -104,8 +118,10 @@ public class SpiderController2 : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            startShooting = true;
-
+            if (detectionHelperCollider == null)
+            {
+                startShooting = true;
+            }
         }
     }
     //ontrigger exit2d
@@ -113,7 +129,10 @@ public class SpiderController2 : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            startShooting = false;
+            if (detectionHelperCollider == null)
+            {
+                startShooting = false;
+            }
         }
     }
 

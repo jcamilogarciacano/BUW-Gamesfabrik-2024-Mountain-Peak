@@ -6,11 +6,12 @@ public class NextFloorSpawner : MonoBehaviour
 {
     public GameObject[] nextFloors; // Array of possible next floors
 
+    public GameObject lastFloor; // Last floor in the scene
     public GameObject[] towers; // Array of possible next floors
     public Transform spawnPoint; // Spawn point for the next floor
 
     public Transform towerSpawnPoint; // Spawn point for the next floor
-    float spawnInterval = 60f; // Time interval between spawning next floors
+    float spawnInterval = 5f; // Time interval between spawning next floors
 
     float spawnTowerInterval = 24; // Time interval between spawning next towers
     float timer = 0f; // Timer to keep track of elapsed time
@@ -23,7 +24,9 @@ public class NextFloorSpawner : MonoBehaviour
     float distanceBetweenFloors = 50f; // Distance between each floor
     void Start()
     {
-        SpawnNextFloor();
+        //check if there are any floors in the array
+        if (nextFloors.Length > 0)
+            SpawnNextFloor();
 
         if(towers.Length > 0)
             SpawnNextTower();
@@ -35,9 +38,11 @@ public class NextFloorSpawner : MonoBehaviour
         timer += Time.deltaTime; // Increase the timer by the time passed since the last frame
         towerTimer += Time.deltaTime; // Increase the timer by the time passed since the last frame
 
+
         if (timer >= spawnInterval)
         {
-            SpawnNextFloor(); // Spawn the next floor
+            if (nextFloors.Length > 0)
+                 SpawnNextFloor(); // Spawn the next floor
 
           
             timer = 0f; // Reset the timer
@@ -87,6 +92,11 @@ public class NextFloorSpawner : MonoBehaviour
         int randomIndex = Random.Range(0, nextFloors.Length);
         GameObject nextFloor = nextFloors[randomIndex];
 
+        // Remove the selected floor from the array
+        List<GameObject> remainingFloors = new List<GameObject>(nextFloors);
+        remainingFloors.RemoveAt(randomIndex);
+        nextFloors = remainingFloors.ToArray();
+
         // Check if the next floor is the same as the previously spawned floor
         if (previousFloors.Count > 0)
         {
@@ -104,12 +114,18 @@ public class NextFloorSpawner : MonoBehaviour
         // Spawn the next floor at the spawn point
         Instantiate(nextFloor, spawnPoint.position, Quaternion.identity);
 
-
-        // create a temp variable to randomly change the distance for the next floor using the distanceBetweenFloors variable
-        //float distance = Random.Range(distanceBetweenFloors - 6f, distanceBetweenFloors);
-        float distance = distanceBetweenFloors;
         // Update the spawn point for the next floor
-        spawnPoint.position += Vector3.up * distance;
+        spawnPoint.position += Vector3.up * distanceBetweenFloors;
+
+        // Check if there are no more floors in nextFloors array
+        if (nextFloors.Length == 0)
+        {
+            // Spawn the last floor at the spawn point
+            Instantiate(lastFloor, spawnPoint.position, Quaternion.identity);
+
+            // Update the spawn point for the last floor
+            spawnPoint.position += Vector3.up * distanceBetweenFloors;
+        }
     }
     void SpawnNextTower()
     {

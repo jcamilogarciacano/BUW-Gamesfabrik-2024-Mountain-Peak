@@ -87,7 +87,7 @@ public class GiantActions : MonoBehaviour
             // If the giant is awake, throw rocks at intervals
             if (isAwake && Time.time >= nextThrowTime)
             {
-                ThrowRocks();
+                //ThrowRocks();
                 nextThrowTime = Time.time + throwInterval;
                  animator.SetTrigger("Attack");
             }
@@ -130,7 +130,7 @@ public class GiantActions : MonoBehaviour
         Debug.Log("Giant has appeared!");
     }
 
-    void ThrowRocks()
+    public void ThrowRocks()
     {
         for (int i = 0; i < numberOfRocks; i++)
         {
