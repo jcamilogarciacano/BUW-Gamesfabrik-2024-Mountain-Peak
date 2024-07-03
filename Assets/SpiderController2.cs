@@ -20,6 +20,7 @@ public class SpiderController2 : MonoBehaviour
     public float rotationThreshold = 1f; // Example value, adjust as needed
     public Animator animator;
 
+    public AudioSource audioSource;
     public SpiderDetectionHelper detectionHelperCollider;
 
     // Start is called before the first frame update
@@ -30,6 +31,8 @@ public class SpiderController2 : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         shootTimer = shootInterval; // Start shooting immediately
         waitTimer = 0.0f; // Start waiting immediately
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -59,7 +62,11 @@ public class SpiderController2 : MonoBehaviour
 
                     if (shootTimer <= 0.0f)
                     {
-                        ShootWeb(); // Shoot web at the end of the shooting phase
+                        //Call shoot web 3 times 0.5 seconds between each call
+                        Invoke("ShootWeb", 0.0f);
+                        //Invoke("ShootWeb", 0.5f);
+                        //Invoke("ShootWeb", 0.5f);
+                        //ShootWeb(); // Shoot web at the end of the shooting phase
                     }
                 }
                 else
@@ -70,7 +77,8 @@ public class SpiderController2 : MonoBehaviour
         }
         else
         {
-            animator.SetBool("isRotating", false); // Set the animator bool to false if not rotating
+         //   animator.SetBool("isRotating", false); // Set the animator bool to false if not rotating
+           // audioSource.Stop();
         }
     }
 
@@ -92,10 +100,13 @@ public class SpiderController2 : MonoBehaviour
         if (Quaternion.Angle(transform.rotation, targetRotation) > rotationThreshold) // Using a threshold to check if rotation is significant
         {
             animator.SetBool("isRotating", true);
+            //play one shot
+            //audioSource.PlayOneShot(audioSource.clip);
         }
         else
         {
             animator.SetBool("isRotating", false);
+            //audioSource.Stop();
         }
     }
 
@@ -106,6 +117,8 @@ public class SpiderController2 : MonoBehaviour
         float projectileSpeed = 10.0f; // Assign a value to projectileSpeed
         GameObject web = Instantiate(webPrefab, transform.position, Quaternion.identity);
         Vector3 direction = player.position - transform.position;
+        //alter the direction vector a little with a random angle
+        //direction = Quaternion.Euler(0, 0, Random.Range(-10, 10)) * direction;
         web.GetComponent<Rigidbody2D>().velocity = direction.normalized * projectileSpeed;
 
         // Rotate the web towards the player

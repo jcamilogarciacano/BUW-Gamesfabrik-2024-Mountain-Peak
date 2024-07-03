@@ -74,12 +74,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1614455610118550881, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+    - {fileID: 2615555105470960602, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5578760609226126965, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 998757805466476280}
+    - targetCorrespondingSourceObject: {fileID: 5578760609226126965, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4571869954888051477}
   m_SourcePrefab: {fileID: 100100000, guid: 5f338b52c69a0ac40bf57f6747204bd5, type: 3}
 --- !u!1 &7530400609662335745 stripped
 GameObject:
@@ -110,6 +114,8 @@ MonoBehaviour:
   canRunBackStairs: 0
   changingDepth: 0
   playerState: 7
+  wasRunning: 0
+  wasWalking: 0
   floorCheckDistance: 0.9
   wallCheckDistance: 1
   wallCheckRayLength: 0.4
@@ -118,3 +124,17 @@ MonoBehaviour:
   slopeSpeed: 0
   isFacingRight: 1
   isHangingOnRope: 0
+  fallingSpeedThreshold: -0.5
+  maxDashTime: 2
+  verticalSpeed: 0
+  newWalkingClip: {fileID: 0}
+  oldWalkingClip: {fileID: 0}
+  animatorOverrideController: {fileID: 0}
+--- !u!81 &4571869954888051477
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7530400609662335745}
+  m_Enabled: 1

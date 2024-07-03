@@ -11,7 +11,7 @@ public class NextFloorSpawner : MonoBehaviour
     public Transform spawnPoint; // Spawn point for the next floor
 
     public Transform towerSpawnPoint; // Spawn point for the next floor
-    float spawnInterval = 5f; // Time interval between spawning next floors
+    float spawnInterval = 30f; // Time interval between spawning next floors
 
     float spawnTowerInterval = 24; // Time interval between spawning next towers
     float timer = 0f; // Timer to keep track of elapsed time

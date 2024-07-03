@@ -706,7 +706,7 @@ public class Movement3 : MonoBehaviour
                 //call the delayed function with invoke so we wait some seconds before dropping the player to falling state
                 if (!isDelayedFallingInvoked)
                 {
-                    Invoke("DelayedFalling", 1f);
+                    Invoke("DelayedFalling", 0.5f);
                     isDelayedFallingInvoked = true;
                 }
             }
@@ -803,7 +803,8 @@ public class Movement3 : MonoBehaviour
     }
     private void MakeDynamic()
     {
-        rb.bodyType = RigidbodyType2D.Dynamic;
+        if(rb != null)
+            rb.bodyType = RigidbodyType2D.Dynamic;
     }
     private void DepthChange()
     {

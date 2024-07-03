@@ -20,33 +20,40 @@ public class CamZoomController : MonoBehaviour
 
 
 
+
+
     private void Start()
     {
         cam = GetComponent<Camera>();
         currentSize = cam.orthographicSize;
         targetSize = zoomedOutSize;
+
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        // or input button Camera
+        if (Input.GetKeyDown(KeyCode.C) || Input.GetButtonDown("Camera"))
         {
             zoomedIn = !zoomedIn;
         }
-    /* timer += Time.deltaTime;
-    if (timer >= switchInterval)
+    }
+    private void FixedUpdate()
     {
-        zoomedIn = !zoomedIn;
-        if (zoomedIn)
+        /* timer += Time.deltaTime;
+        if (timer >= switchInterval)
         {
-            switchInterval = 7f;
-        }
-        else
-        {
-            switchInterval = 8f;
-        }
-        timer = 0f;
-    } */
+            zoomedIn = !zoomedIn;
+            if (zoomedIn)
+            {
+                switchInterval = 7f;
+            }
+            else
+            {
+                switchInterval = 8f;
+            }
+            timer = 0f;
+        } */
         // Check for state change and update target size accordingly
         if (zoomedIn)
         {

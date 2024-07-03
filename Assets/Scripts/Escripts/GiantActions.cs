@@ -3,6 +3,7 @@ using UnityEngine;
 public class GiantActions : MonoBehaviour
 {
     public GameObject rockPrefab; // Prefab for the rock projectile
+    public GameObject rockPrefab2; // Prefab for the rock projectile
     public Transform player; // Reference to the player
     public Transform leftPoint; // Reference to the left point
     public Transform rightPoint; // Reference to the right point
@@ -18,6 +19,7 @@ public class GiantActions : MonoBehaviour
     private bool isVisible = true; // Whether the giant is currently visible
     private float nextThrowTime = 0.0f; // Time when the giant can throw the next rock
 
+    public AudioSource attackingSound;
     public Animator animator;   
 
     void Awake()
@@ -132,10 +134,17 @@ public class GiantActions : MonoBehaviour
 
     public void ThrowRocks()
     {
+        //play one time attacking sound
+        attackingSound.PlayOneShot(attackingSound.clip);
         for (int i = 0; i < numberOfRocks; i++)
         {
-            // Instantiate the rock prefab at the offset position
-            GameObject rock = Instantiate(rockPrefab, transform.position + throwOffset, Quaternion.identity);
+            // Select a random rock prefab
+            GameObject selectedRockPrefab = Random.Range(0, 2) == 0 ? rockPrefab : rockPrefab2;
+
+            // Instantiate the selected rock prefab at the offset position
+            GameObject rock = Instantiate(selectedRockPrefab, transform.position + throwOffset, Quaternion.identity);
+            //add a continuious rotaiton to the rock
+            rock.transform.Rotate(0, 0, Random.Range(0, 360));
 
             // Destroy the rock after 5 seconds
             Destroy(rock, 5f);
