@@ -123,7 +123,9 @@ public class TutorialManager : MonoBehaviour
 
     void LoadGameScene()
     {
-        SceneManager.LoadScene("GameScene");
+        //load Demo3 scene as single
+        SceneManager.LoadScene("Demo3", LoadSceneMode.Single);
+
     }
 
     void PlaySound(AudioClip clip)

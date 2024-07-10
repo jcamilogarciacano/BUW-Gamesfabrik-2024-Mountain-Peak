@@ -76,7 +76,7 @@ public class Movement3 : MonoBehaviour
 
     bool freezePositionSet = false;
 
-    private bool isDelayedFallingInvoked = false;
+    public bool isDelayedFallingInvoked = false;
 
     public bool isHangingOnRope = false;
 
@@ -94,6 +94,25 @@ public class Movement3 : MonoBehaviour
     public AnimationClip newWalkingClip; // Assign this in the Inspector
     public AnimationClip oldWalkingClip; // Assign this in the Inspector
     public AnimatorOverrideController animatorOverrideController;
+
+    public int verticalFallingDelay = 0;
+    public int verticalFallingMaxDelay = 10;
+
+    //add a list of audoclips for the footstep sounds
+    public List<AudioClip> footstepSounds;
+
+    public List<AudioClip> othersSounds;
+    //add an audio source for the footstep sounds
+    public AudioSource audioSource;
+
+    public AudioSource othersAudioSource;
+    private bool canPlayFootstep = true; // Flag to control the audio playback
+
+    private bool canPlayAudio = true;
+
+    private bool startJumping = true;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -113,7 +132,7 @@ public class Movement3 : MonoBehaviour
             moveHorizontal = Input.GetAxis("Horizontal");
             moveVertical = Input.GetAxis("Vertical");
         }
-        if (Input.GetButton("Running") && playerState != PlayerState.Falling && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack && moveHorizontal != 0 && playerState != PlayerState.Jumping && playerState != PlayerState.Climbing && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp && playerState != PlayerState.GrapplingGun  && playerState != PlayerState.RopeClimbing)
+        if (Input.GetButton("Running") && playerState != PlayerState.Falling && playerState != PlayerState.RunningIn && playerState != PlayerState.RunningBack && moveHorizontal != 0 && playerState != PlayerState.Jumping && playerState != PlayerState.Climbing && playerState != PlayerState.RopeIddle && playerState != PlayerState.RopeJumping && playerState != PlayerState.RopeJumpingLeft && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp && playerState != PlayerState.GrapplingGun && playerState != PlayerState.RopeClimbing)
         {
             print("runninggg");
             TransitionToState(PlayerState.Running);
@@ -264,38 +283,6 @@ public class Movement3 : MonoBehaviour
             }
 
         }
-        /* 
-                if (Input.GetButtonDown("Climb") || Input.GetButtonDown("WalkBack") && playerState == PlayerState.Idle && canRunInStairs == true || canRunBackStairs == true)
-                {
-
-                    if (canRunInStairs == true)
-                    {
-                        if (!isFacingRight)
-                        {
-                            Flip();
-                            TransitionToState(PlayerState.RunningIn);
-                        }
-                        else
-                        {
-                            TransitionToState(PlayerState.RunningIn);
-                        }
-                        //TransitionToState(PlayerState.RunningIn);
-                    }
-                    else if (canRunBackStairs == true)
-                    {
-                        if (!isFacingRight)
-                        {
-                            Flip();
-                            TransitionToState(PlayerState.RunningBack);
-                        }
-                        else
-                        {
-                            TransitionToState(PlayerState.RunningBack);
-                        }
-                    }
-                    return;
-                } */
-        //else if (Input.GetButtonDown("Jump") && playerState == PlayerState.Hanging)
         if (Input.GetButtonDown("Climb") && canClimb == true && playerState != PlayerState.WebTrapped)
         {
             if (!isFacingRight)
@@ -331,7 +318,7 @@ public class Movement3 : MonoBehaviour
 
         if (playerState == PlayerState.Falling)
         {
-            print("falling from update");
+            //print("falling from update");
             //         CheckGround();
             CheckLedge();
             CheckRope();
@@ -353,23 +340,91 @@ public class Movement3 : MonoBehaviour
         animator.SetFloat("VerticalSpeed", rb.velocity.y);
     }
 
+    // Method to play a specific audio clip by index
+    public void PlayAudioClip(int index)
+    {
+        if (canPlayAudio && index >= 0 && index < othersSounds.Count)
+        {
+            AudioClip clipToPlay = othersSounds[index];
+            othersAudioSource.PlayOneShot(clipToPlay);
+            StartCoroutine(WaitForAudioClipToEnd2(clipToPlay.length));
+        }
+    }
+    public void PlayFootstepSound()
+    {
+
+        //
+        // Get a random index for the footstep sound
+        int randomIndex = Random.Range(0, footstepSounds.Count);
+        //stop any previous audio playing
+        audioSource.Stop();
+        // Play the audio clip at the random index
+        audioSource.PlayOneShot(footstepSounds[randomIndex]);
+
+        // Start the coroutine to wait for the audio clip to finish playing
+        StartCoroutine(WaitForAudioClipToEnd(footstepSounds[randomIndex].length));
+    }
+    public void PlayFootstepSoundRunning()
+    {
+        //
+        // Get a random index for the footstep sound
+        int randomIndex = Random.Range(0, footstepSounds.Count);
+        // Play the audio clip at the random index
+        audioSource.PlayOneShot(footstepSounds[randomIndex]);
+        float clipLength = footstepSounds[randomIndex].length;
+        clipLength /= 2; // Play the next sound faster if running, adjust this value as needed
+        // Start the coroutine to wait for the audio clip to finish playing
+        StartCoroutine(WaitForAudioClipToEnd(clipLength));
+    }
+
+    // Coroutine that waits for the audio clip to finish playing
+    private IEnumerator WaitForAudioClipToEnd(float clipLength)
+    {
+        canPlayFootstep = false; // Prevent playing again until the current clip finishes
+        yield return new WaitForSeconds(clipLength); // Wait for the length of the clip
+        canPlayFootstep = true; // Allow playing again
+    }
+    private IEnumerator WaitForAudioClipToEnd2(float clipLength)
+    {
+        canPlayAudio = false; // Prevent playing again until the current clip finishes
+        yield return new WaitForSeconds(clipLength); // Wait for the length of the clip
+        canPlayAudio = true; // Allow playing again
+    }
+
     void FixedUpdate()
     {
         switch (playerState)
         {
             case PlayerState.Walking:
+                //playstep sound
+                if (canPlayFootstep)
+                {
+                    PlayFootstepSound();
+                }
                 wasRunning = false;
                 wasWalking = true;
                 speed = initialSpeed;
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), slopeSpeed * Input.GetAxis("Horizontal"));
                 break;
             case PlayerState.Running:
+
+                // i want the playfootstep sound to play faster because its running
+                if (canPlayFootstep)
+                {
+                    PlayFootstepSoundRunning();
+                }
                 wasWalking = false;
                 wasRunning = true;
                 speed = initialSpeed * 2;
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), slopeSpeed * Input.GetAxis("Horizontal"));
                 break;
             case PlayerState.Jumping:
+
+                if (canPlayAudio && startJumping == true)
+                {
+                    print("playing sound twice");
+                    PlayAudioClip(0);
+                }
                 // change rigidbody to dynamic so the player can jump
                 //rb.bodyType = RigidbodyType2D.Kinematic;
                 if (wasRunning == true)
@@ -380,12 +435,17 @@ public class Movement3 : MonoBehaviour
                 {
                     speed = initialSpeed;
                 }
+                if(startJumping){
                 rb.AddForce(new Vector2(0, jumpForce * 0.5f), ForceMode2D.Impulse);
                 transform.position = new Vector2(transform.position.x, transform.position.y + 0.01f);
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y + jumpForce);
+                }
                 break;
             case PlayerState.Climbing:
 
+                if(canPlayAudio){
+                    PlayAudioClip(1);
+                }
                 //rb.velocity = new Vector2(rb.velocity.x, climbingSpeed);
                 break;
             case PlayerState.DashingLeft:
@@ -407,7 +467,7 @@ public class Movement3 : MonoBehaviour
                 wasRunning = false;
                 wasWalking = false;
                 //rb.bodyType = RigidbodyType2D.Dynamic;
-                print("falling from fixed update case");
+                //print("falling from fixed update case");
                 if (rb.velocity.y < fallingSpeedThreshold)
                 {
                     transform.position = new Vector2(transform.position.x, transform.position.y - 0.05f);
@@ -425,15 +485,18 @@ public class Movement3 : MonoBehaviour
                 {
                     TransitionToState(PlayerState.RopeClimbing);
                 }
+                else{
+                    rb.velocity = new Vector2(0, 0);
+                }
                 break;
             case PlayerState.RopeClimbing:
                 speed = initialSpeed;
-                rb.velocity = new Vector2(0, (speed/2) * Input.GetAxis("Vertical"));
+                rb.velocity = new Vector2(0, (speed / 2) * Input.GetAxis("Vertical"));
                 if (Input.GetAxis("Vertical") == 0)
                 {
                     TransitionToState(PlayerState.RopeIddle);
                 }
-                
+
                 break;
             case PlayerState.RopeJumping:
                 break;
@@ -455,18 +518,25 @@ public class Movement3 : MonoBehaviour
                 CheckStairs();
                 //rb.bodyType = RigidbodyType2D.Dynamic;
                 print("default");
+                startJumping = false;
                 rb.velocity = new Vector2(rb.velocity.x, 0);
                 gameObject.layer = 3;
                 break;
         }
     }
 
+    public void StartJumpingBro()
+    {
+        startJumping = true;
+    }
     public void EndJumping()
     {
         if (playerState == PlayerState.Jumping)
         {
+            
             playerState = PlayerState.Falling;
         }
+        startJumping = false;
     }
 
     public void EndClimbing()
@@ -654,18 +724,20 @@ public class Movement3 : MonoBehaviour
             {
                 //  print("slope detected2");
                 //transform player Y position up so  the player is not inside the slope
-                if (floorDetectHelperR.collider == null || floorDetectHelperL.collider == null)
+                if (floorDetectHelperR.collider != null || floorDetectHelperL.collider != null)
                 {
                     //transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
+                    print(" increase step height on");
+                    // slopeSpeed = 1f;
                 }
                 //print("i think im walking but not really");
-                //print(" increase step height on");
-                slopeSpeed = 1f;
+
             }
             else if ((hit1.collider != null || hit2.collider != null) && playerState == PlayerState.Falling && playerState != PlayerState.WebTrapped && playerState != PlayerState.RockHitted && playerState != PlayerState.RockWakingUp)
             {
                 //  print("slope detected");
                 // print("slope detectedgrrrrrrrrrrr");
+                print(" increase step height off");
                 //playerState = PlayerState.Idle;
                 slopeSpeed = 0f;
             }
@@ -693,19 +765,35 @@ public class Movement3 : MonoBehaviour
         }
         #endregion
 
+        // if the player is not grounded and there is no ground detected then the player is falling but we want to add a delay before changing the state to falling
         if (BoxCast.collider == null && !changingDepth)
         {
             //  print("no ground detected");
-            if (playerState != PlayerState.RockHitted)
+            if (playerState != PlayerState.RockHitted) // for falling, we want to add a delay before changing the state to falling
             {
-                //print("falling AAAAAAAAAA");
-                playerState = PlayerState.Falling;
+                print("increasing vertical delay");
+                verticalFallingDelay++;
+                if (verticalFallingDelay > verticalFallingMaxDelay)
+                {
+                    print("state changing to Falling");
+                    verticalFallingDelay = 0;
+                    playerState = PlayerState.Falling;
+                }
+                else
+                {
+                    transform.position = new Vector2(transform.position.x, transform.position.y - 0.1f);
+
+                    //add downwards force to the player
+                    //rb.AddForce(new Vector2(0, -fallSpeed), ForceMode2D.Impulse);
+                    print("reseting vertical delay");
+                    // verticalFallingDelay = 0;
+                }
             }
             else if (playerState == PlayerState.RockHitted)
             {
-                //call the delayed function with invoke so we wait some seconds before dropping the player to falling state
                 if (!isDelayedFallingInvoked)
                 {
+
                     Invoke("DelayedFalling", 0.5f);
                     isDelayedFallingInvoked = true;
                 }
@@ -717,6 +805,7 @@ public class Movement3 : MonoBehaviour
             //print("NOT FALLING AAAAAAAAAA");
             //isGrounded = true;
             playerState = PlayerState.Idle;
+            verticalFallingDelay = 0;
         }
         else if (BoxCast.collider != null && playerState == PlayerState.RockHitted)
         {
@@ -790,7 +879,7 @@ public class Movement3 : MonoBehaviour
         }
         else if (hit5.collider == null)
         {
-            if(playerState == PlayerState.RopeIddle || playerState == PlayerState.RopeClimbing)
+            if (playerState == PlayerState.RopeIddle || playerState == PlayerState.RopeClimbing)
             {
                 playerState = PlayerState.Falling;
             }
@@ -803,7 +892,7 @@ public class Movement3 : MonoBehaviour
     }
     private void MakeDynamic()
     {
-        if(rb != null)
+        if (rb != null)
             rb.bodyType = RigidbodyType2D.Dynamic;
     }
     private void DepthChange()

@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rockPrefab: {fileID: 2753411238534940043, guid: eec8378f9daaddb489fc4c34e6ecf2ea, type: 3}
-  rockPrefab2: {fileID: 2753411238534940043, guid: f0c69b4ebd658424b8d7091c79d15264, type: 3}
+  rockPrefab2: {fileID: 2753411238534940043, guid: eec8378f9daaddb489fc4c34e6ecf2ea, type: 3}
   player: {fileID: 0}
   leftPoint: {fileID: 0}
   rightPoint: {fileID: 0}
@@ -124,7 +124,11 @@ MonoBehaviour:
   throwOffset: {x: 0, y: 1, z: 0}
   numberOfRocks: 5
   rockSizeRange: {x: 0.5, y: 0.8}
-  attackingSound: {fileID: 8864117086021100281}
+  audioSource: {fileID: 0}
+  rocksAudioSource: {fileID: 7820334615931860300}
+  audioClips:
+  - {fileID: 8300000, guid: 6ee8e443cc53c994a991946f2d6f6bd3, type: 3}
+  - {fileID: 8300000, guid: 87668aa3d09b4cd429d55420c4a09ac7, type: 3}
   animator: {fileID: 0}
 --- !u!95 &5391332322555678693
 Animator:
@@ -159,16 +163,16 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6697d22044ac6734c9257b3e884b2855, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.4
-  m_Pitch: 1
-  Loop: 0
-  Mute: 1
+  m_Volume: 0.3
+  m_Pitch: 0.81
+  Loop: 1
+  Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 22.1
+  MaxDistance: 18
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -218,7 +222,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.083333336
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -287,13 +291,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7e093ad2688fe2448aae3be74cc67bdc, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 85
+  Priority: 130
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 20

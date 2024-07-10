@@ -37,7 +37,7 @@ public class CameraCinematicPanning : MonoBehaviour
     void Start()
     {
         //set the color of the fade sprite to black
-        fadeSprite.color = new Color(0.15f, 0.15f, 0.15f, 1);
+        fadeSprite.color = new Color(0.3f, 0.3f, 0.3f, 1);
         initialTextSpawn = GameObject.Find("InitialPlayer").GetComponent<InitialTextSpawn>();
     }
 
@@ -58,7 +58,7 @@ public class CameraCinematicPanning : MonoBehaviour
             elapsedTime = 0f;
             isPanning = true;
             startPanning = false; // Prevent re-entry
-            Invoke("PanToTarget", 4f);
+            Invoke("PanToTarget", 2f);
             playerIntro.GetComponent<Animator>().SetTrigger("StartIntro");
         }
 
@@ -95,7 +95,7 @@ public class CameraCinematicPanning : MonoBehaviour
                 }
             }
             // Update fade color
-            fadeSprite.color = Color.Lerp(new Color(0.15f, 0.15f, 0.15f, 1), new Color(1, 1, 1, 1), progress);
+            fadeSprite.color = Color.Lerp(new Color(0.3f, 0.3f, 0.3f, 1), new Color(1, 1, 1, 1), progress);
         }
     }
 

@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class GiantActions : MonoBehaviour
 {
@@ -19,61 +21,22 @@ public class GiantActions : MonoBehaviour
     private bool isVisible = true; // Whether the giant is currently visible
     private float nextThrowTime = 0.0f; // Time when the giant can throw the next rock
 
-    public AudioSource attackingSound;
-    public Animator animator;   
+    public AudioSource audioSource;
+    public AudioSource rocksAudioSource;
+
+    public List<AudioClip> audioClips; // List to store multiple audio clips
+
+    private bool canPlayAudio = true; // Flag to control the audio playback
+
+    public Animator animator;
 
     void Awake()
     {
-        //use gameobject .find to find the objecst with tag "Player", "LeftPoint" and "RightPoint"
         player = GameObject.FindGameObjectWithTag("Player").transform;
         animator = GetComponent<Animator>();
-        //leftPoint = GameObject.FindGameObjectWithTag("Left").transform;
-        //rightPoint = GameObject.FindGameObjectWithTag("Right").transform;
+        audioSource = GetComponent<AudioSource>();
+        //rocksAudioSource = GetComponentInChildren<AudioSource>();
     }
-    // void Update()
-    // {
-    //     // Check the distance to the player
-    //     float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-    //     float distanceToLeft = Vector3.Distance(transform.position, leftPoint.position);
-    //     float distanceToRight = Vector3.Distance(transform.position, rightPoint.position);
-
-    //     bool isPlayerNear = distanceToPlayer <= detectionRadius;
-    //     bool isLeftNear = distanceToLeft <= detectionRadius;
-    //     bool isRightNear = distanceToRight <= detectionRadius;
-
-    //     if (isPlayerNear)
-    //     {
-    //         if (!isAwake)
-    //         {
-    //             WakeUp();
-    //         }
-
-    //         // If the giant is awake, throw rocks at intervals
-    //         if (isAwake && Time.time >= nextThrowTime)
-    //         {
-    //             ThrowRocks();
-    //             nextThrowTime = Time.time + throwInterval;
-    //         }
-    //     }
-
-    //     if (isLeftNear || isRightNear)
-    //     {
-    //         if (!isAwake)
-    //         {
-    //             WakeUp();
-    //         }
-    //         if (!isVisible)
-    //         {
-    //             Debug.Log("Inside isVisible");
-    //             Appear();
-    //         }
-    //     }
-    //     else if (!isPlayerNear && isAwake)
-    //     {
-    //         GoToSleep();
-    //         Disappear();
-    //     }
-    // }
 
     void Update()
     {
@@ -89,9 +52,10 @@ public class GiantActions : MonoBehaviour
             // If the giant is awake, throw rocks at intervals
             if (isAwake && Time.time >= nextThrowTime)
             {
+                PlayAudioClip(0);
                 //ThrowRocks();
                 nextThrowTime = Time.time + throwInterval;
-                 animator.SetTrigger("Attack");
+                animator.SetTrigger("Attack");
             }
         }
         else if (isAwake)
@@ -99,7 +63,7 @@ public class GiantActions : MonoBehaviour
             GoToSleep();
         }
     }
-    
+
 
     void WakeUp()
     {
@@ -131,11 +95,27 @@ public class GiantActions : MonoBehaviour
         isVisible = true;
         Debug.Log("Giant has appeared!");
     }
+    public void PlayAudioClip(int index)
+    {
+        if (canPlayAudio && index >= 0 && index < audioClips.Count)
+        {
+            AudioClip clipToPlay = audioClips[index];
+            audioSource.PlayOneShot(clipToPlay);
+            StartCoroutine(WaitForAudioClipToEnd(clipToPlay.length));
+        }
+    }
 
+    // Coroutine that waits for the audio clip to finish playing
+    private IEnumerator WaitForAudioClipToEnd(float clipLength)
+    {
+        canPlayAudio = false; // Prevent playing again until the current clip finishes
+        yield return new WaitForSeconds(clipLength); // Wait for the length of the clip
+        canPlayAudio = true; // Allow playing again
+    }
     public void ThrowRocks()
     {
         //play one time attacking sound
-        attackingSound.PlayOneShot(attackingSound.clip);
+        rocksAudioSource.PlayOneShot(audioClips[1]);
         for (int i = 0; i < numberOfRocks; i++)
         {
             // Select a random rock prefab
