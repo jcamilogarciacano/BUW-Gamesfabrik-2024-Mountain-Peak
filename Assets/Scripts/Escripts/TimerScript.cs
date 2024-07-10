@@ -73,6 +73,7 @@ public class TimerScript : MonoBehaviour
         {
             if (isTimerRunning)
             {
+                print("Timer is running");
                 remainingTime -= Time.deltaTime;
                 int minutes = Mathf.FloorToInt(remainingTime / 60);
                 int seconds = Mathf.FloorToInt(remainingTime % 60);
