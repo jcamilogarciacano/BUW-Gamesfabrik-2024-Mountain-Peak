@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CamZoomController : MonoBehaviour
 {
-    public bool zoomedIn = false; // Boolean state to control zoom
+    public bool zoomedIn = true; // Boolean state to control zoom
 
     public float zoomSpeed = 5f; // Speed of the camera zoom
     public float zoomedInSize = 5f; // Orthographic size when zoomed in
@@ -26,7 +26,7 @@ public class CamZoomController : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         currentSize = cam.orthographicSize;
-        targetSize = zoomedOutSize;
+        targetSize = zoomedInSize;
 
     }
 

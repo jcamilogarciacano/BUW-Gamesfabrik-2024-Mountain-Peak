@@ -5,6 +5,8 @@ using UnityEngine;
 public class WebSplash : MonoBehaviour
 {
     public float unfreezeTimer = 3f;
+
+    public Animator splashAnimator;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,9 @@ public class WebSplash : MonoBehaviour
             FreezePlayer(collision.gameObject);
             // Unfreeze the player after 5 seconds
             StartCoroutine(UnfreezePlayerAfterDelay(collision.gameObject, unfreezeTimer));
+
+            //set the animator trigget playerTrigger on
+            splashAnimator.SetTrigger("PlayerTrigger");
         }
     }
     

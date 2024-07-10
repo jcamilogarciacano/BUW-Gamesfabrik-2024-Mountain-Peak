@@ -21,8 +21,16 @@ public class SpiderController2 : MonoBehaviour
     public Animator animator;
 
     public AudioSource audioSource;
+    public AudioSource spitAudioSource;
     public SpiderDetectionHelper detectionHelperCollider;
 
+    public List<AudioClip> audioClips; // List to store multiple audio clips
+
+    //audio clip for spitting
+    public AudioClip spitAudioClip;
+    
+
+      private bool canPlayAudio = true; // Flag to control the audio playback
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +41,7 @@ public class SpiderController2 : MonoBehaviour
         waitTimer = 0.0f; // Start waiting immediately
 
         audioSource = GetComponent<AudioSource>();
+        //spitAudioSource = GetComponentInChildren<AudioSource>();
     }
 
     // Update is called once per frame
@@ -64,6 +73,8 @@ public class SpiderController2 : MonoBehaviour
                     {
                         //Call shoot web 3 times 0.5 seconds between each call
                         Invoke("ShootWeb", 0.0f);
+                        //play the spit audio clip
+                        spitAudioSource.PlayOneShot(spitAudioClip);
                         //Invoke("ShootWeb", 0.5f);
                         //Invoke("ShootWeb", 0.5f);
                         //ShootWeb(); // Shoot web at the end of the shooting phase
@@ -100,8 +111,9 @@ public class SpiderController2 : MonoBehaviour
         if (Quaternion.Angle(transform.rotation, targetRotation) > rotationThreshold) // Using a threshold to check if rotation is significant
         {
             animator.SetBool("isRotating", true);
-            //play one shot
-            //audioSource.PlayOneShot(audioSource.clip);
+            // pick a random audio
+            int randomIndex = Random.Range(0, audioClips.Count);
+            PlayAudioClip(randomIndex);
         }
         else
         {
@@ -109,7 +121,24 @@ public class SpiderController2 : MonoBehaviour
             //audioSource.Stop();
         }
     }
+    // Method to attempt to play the audio clip
+ public void PlayAudioClip(int index)
+    {
+        if (canPlayAudio && index >= 0 && index < audioClips.Count)
+        {
+            AudioClip clipToPlay = audioClips[index];
+            audioSource.PlayOneShot(clipToPlay);
+            StartCoroutine(WaitForAudioClipToEnd(clipToPlay.length));
+        }
+    }
 
+    // Coroutine that waits for the audio clip to finish playing
+    private IEnumerator WaitForAudioClipToEnd(float clipLength)
+    {
+        canPlayAudio = false; // Prevent playing again until the current clip finishes
+        yield return new WaitForSeconds(clipLength); // Wait for the length of the clip
+        canPlayAudio = true; // Allow playing again
+    }
     // Shoot web function
     // Instantiate web prefab
     void ShootWeb()

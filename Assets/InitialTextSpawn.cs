@@ -5,16 +5,37 @@ using TMPro;
 
 public class InitialTextSpawn : MonoBehaviour
 {
+    //get a video player component
+    public GameObject videoPlayer;
     public GameObject text;
+    public GameObject plane;
 
     void Start()
     {
         
     }
 
+    bool hasPaused = false;
+
     void Update()
     {
-        
+        //when the video in the video player is 3 seconds in, pause the video and fade in the text
+        if (videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().time >= 3.5f && !hasPaused)
+        {
+            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Pause();
+            //ShowText();
+            FadeText();
+            hasPaused = true;
+        }
+        if(Input.GetButtonDown("Camera")){
+            //continue video playback from where it left off
+            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Play();
+        }
+        //if the video has ended, hide the videoplane
+        if (videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().time >= 6)
+        {
+            //plane.SetActive(false);
+        }
     }
 
     public void ShowText()

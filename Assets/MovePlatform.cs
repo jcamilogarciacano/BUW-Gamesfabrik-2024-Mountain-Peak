@@ -24,6 +24,13 @@ public class MovePlatform : MonoBehaviour
     public bool considerInitialPos; // Whether to consider the initial position as the starting point
     private float timer;
 
+
+    // Rotate platform
+    public float rotateSpeed = 10f;
+    // bool rotate at all
+    public bool rotate = false;
+    public bool rotateClockwise = true;
+
     private SpiderController2 spiderController2;
 
     // Start is called before the first frame update
@@ -72,7 +79,19 @@ public class MovePlatform : MonoBehaviour
     
             transform.Translate(moveVector * moveSpeed * Time.deltaTime);
             spiderController2?.animator.SetBool("isRotating", true);
-    
+            
+            // Rotate platform
+            if (rotate)
+            {
+                if (rotateClockwise)
+                {
+                    transform.Rotate(Vector3.forward, rotateSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    transform.Rotate(Vector3.forward, -rotateSpeed * Time.deltaTime);
+                }
+            }
             // Check distance to target position when moving outward, else check distance to initial position
             if (movingOutward && Vector3.Distance(transform.position, targetPosition) < moveThreshold)
             {

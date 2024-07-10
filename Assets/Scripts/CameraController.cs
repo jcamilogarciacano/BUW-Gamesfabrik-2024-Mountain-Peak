@@ -19,6 +19,16 @@ public class CameraController : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private int currentPositionIndex = 0; // Current position index for camera movement
 
+    // variable for background that will follow with the camera only on the Y axis.
+    public GameObject background;
+    //speed of the background movement in relation to the camera movement on the Y axis 
+    public float backgroundSpeed = 0.1f;
+
+    public float backgroundSpeedY = 1f;
+
+    //add an offset for the background
+    public Vector3 backgroundOffset;
+
 
     // Update is called once per frame
     void FixedUpdate()
@@ -53,6 +63,19 @@ public class CameraController : MonoBehaviour
 
         // Smoothly move the camera towards the desired position
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, delay);
+
+        // Move the background with the camera on the Y axis
+        if (background != null)
+        {
+            Vector3 backgroundPosition = background.transform.position;
+            backgroundPosition.y = transform.position.y * backgroundSpeedY + backgroundOffset.y;
+            background.transform.position = backgroundPosition;
+
+            //add an inscreased panning for the X axis to simulate a parallax effect on the background 
+            backgroundPosition.x = transform.position.x * backgroundSpeed*2 + backgroundOffset.x;
+            background.transform.position = backgroundPosition;
+
+        }
     }
 
     // Function to handle camera movement between positions
