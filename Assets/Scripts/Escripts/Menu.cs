@@ -56,6 +56,7 @@ public class Menu : MonoBehaviour
         // Check for "A" button press or Enter/Return key for selection
         if (Input.GetButtonDown("Submit") || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            PlayNavigationSound();
             buttons[currentIndex].onClick.Invoke();
             lastInputTime = Time.time; // Update the last input time
         }

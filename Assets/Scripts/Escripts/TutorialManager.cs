@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class TutorialManager : MonoBehaviour
     public AudioClip navigationSound; // Reference to the navigation sound
     public AudioClip playSound; // Reference to the play button sound
     private AudioSource audioSource; // AudioSource component to play the sound
+    // private TypingEffect typingEffect; // Reference to the TypingEffect script
 
     void Start()
     {
@@ -25,6 +27,8 @@ public class TutorialManager : MonoBehaviour
         playButton.onClick.AddListener(LoadGameScene);
 
         audioSource = GetComponent<AudioSource>();
+        // typingEffect = tutorialSlides[currentSlideIndex].GetComponentInChildren<TypingEffect>();
+
     }
 
     void Update()
@@ -35,23 +39,23 @@ public class TutorialManager : MonoBehaviour
     void HandleKeyboardAndJoystickInput()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        
+
         if (Time.time - lastJoystickInputTime > joystickCooldown)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) || horizontalInput < 0)
             {
-                PlaySound(navigationSound);
+                // PlaySound(navigationSound);
                 ShowPreviousSlide();
                 lastJoystickInputTime = Time.time; // Reset the timer
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow) || horizontalInput > 0)
             {
-                PlaySound(navigationSound);
+                // PlaySound(navigationSound);
                 ShowNextSlide();
                 lastJoystickInputTime = Time.time; // Reset the timer
             }
         }
-        
+
         if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetButtonDown("Submit")) && currentSlideIndex == tutorialSlides.Length - 1)
         {
             PlaySound(navigationSound);
@@ -111,6 +115,16 @@ public class TutorialManager : MonoBehaviour
         }
 
         UpdateDotIndicators();
+        // Trigger the typing effect for the current slide
+        TMP_Text textComponent = tutorialSlides[currentSlideIndex].GetComponentInChildren<TMP_Text>();
+        if (textComponent != null)
+        {
+            TypingEffect typingEffect = textComponent.GetComponent<TypingEffect>();
+            if (typingEffect != null)
+            {
+                typingEffect.StartTyping();
+            }
+        }
     }
 
     void UpdateDotIndicators()
