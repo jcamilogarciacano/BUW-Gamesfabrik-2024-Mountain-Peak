@@ -14,6 +14,8 @@ TagManager:
   - Rock
   - Left
   - Right
+  - Clouds
+  - VictoryPosition
   layers:
   - Default
   - TransparentFX
@@ -27,7 +29,7 @@ TagManager:
   - InStairs
   - Graplabe Surface
   - BackStairs
-  - 
+  - VictoryPosition
   - 
   - 
   - 
