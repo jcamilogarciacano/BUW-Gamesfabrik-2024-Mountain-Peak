@@ -436,6 +436,7 @@ public class Movement3 : MonoBehaviour
                     speed = initialSpeed;
                 }
                 if(startJumping){
+                    CheckRope();
                 rb.AddForce(new Vector2(0, jumpForce * 0.5f), ForceMode2D.Impulse);
                 transform.position = new Vector2(transform.position.x, transform.position.y + 0.01f);
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y + jumpForce);
