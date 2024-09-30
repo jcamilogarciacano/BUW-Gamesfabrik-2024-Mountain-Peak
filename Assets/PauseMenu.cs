@@ -9,9 +9,17 @@ public class PauseMenu : MonoBehaviour
     public bool isPaused = false;
     public GameObject player;
 
+    //reference to eventsystem
+    public GameObject eventSystem;
+
+    public GameObject restartButton;
+
     // Start is called before the first frame update
     void Start()
     {
+        //get the event system
+        eventSystem = GameObject.Find("EventSystem");
+
         pauseMenu.SetActive(false);
     }
 
@@ -34,6 +42,8 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        //set the event system to the first selected gameobject
+        eventSystem.GetComponent<UnityEngine.EventSystems.EventSystem>().SetSelectedGameObject(restartButton);
         Time.timeScale = 0;
         isPaused = true;
         pauseMenu.SetActive(true);

@@ -17,9 +17,16 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("LeaderboardScene"); 
     }
-
+      public void Credits()
+    {
+        SceneManager.LoadScene("Credits"); 
+    }
     public void ExitGame()
     {
         Application.Quit();
+    }
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu"); 
     }
 }

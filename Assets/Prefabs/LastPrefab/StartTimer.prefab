@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4065360528289884737}
   - component: {fileID: 1160933328252217701}
-  - component: {fileID: 2733982487389989131}
+  - component: {fileID: 3544677682410863837}
   m_Layer: 0
   m_Name: StartTimer
   m_TagString: Untagged
@@ -78,7 +78,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.8254747, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2733982487389989131
+--- !u!114 &3544677682410863837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

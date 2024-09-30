@@ -18,7 +18,7 @@ public class Menu : MonoBehaviour
     void Start()
     {
         newGameButton.onClick.AddListener(() => LoadScene("TutorialScene"));
-        leaderboardButton.onClick.AddListener(() => LoadScene("LeaderboardScene"));
+        //leaderboardButton.onClick.AddListener(() => LoadScene("LeaderboardScene"));
         exitButton.onClick.AddListener(ExitGame);
 
         buttons = new Button[] { newGameButton, leaderboardButton, exitButton };

@@ -48,3 +48,4 @@ public class TimerTrigger : MonoBehaviour
         TimerScript.Instance.IsTimerRunning = true;
     }
 }
+

@@ -18,6 +18,8 @@ public class TutorialManager : MonoBehaviour
     private AudioSource audioSource; // AudioSource component to play the sound
     // private TypingEffect typingEffect; // Reference to the TypingEffect script
 
+    public GameObject loadingText;
+
     void Start()
     {
         UpdateSlides();
@@ -137,9 +139,13 @@ public class TutorialManager : MonoBehaviour
 
     void LoadGameScene()
     {
+        loadingText.SetActive(true);
+        //mute the audio source or stop it.
+        audioSource.Stop();
+        //wait one second 
+        Invoke("LoadScene", 3f);
         //load Demo3 scene as single
-        SceneManager.LoadScene("Demo3", LoadSceneMode.Single);
-
+        //SceneManager.LoadScene("Demo3", LoadSceneMode.Single);
     }
 
     void PlaySound(AudioClip clip)
@@ -148,5 +154,10 @@ public class TutorialManager : MonoBehaviour
         {
             audioSource.PlayOneShot(clip);
         }
+    }
+    void LoadScene()
+    {
+        //load Demo3 scene as single
+        SceneManager.LoadScene("Demo3", LoadSceneMode.Single);
     }
 }

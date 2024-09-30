@@ -1078,7 +1078,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.79, y: 4.28}
+    oldSize: {x: 4.7902184, y: 4.28}
     newSize: {x: 4.79, y: 4.28}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1570,7 +1570,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.79, y: 4.28}
+    oldSize: {x: 4.7902184, y: 4.28}
     newSize: {x: 4.79, y: 4.28}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -4452,6 +4452,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2733982487389989131, guid: be692b91443d1c14285cc52bfcbe44d1, type: 3}
+      propertyPath: timeStopper
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3544677682410863837, guid: be692b91443d1c14285cc52bfcbe44d1, type: 3}
+      propertyPath: timeStarter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3544677682410863837, guid: be692b91443d1c14285cc52bfcbe44d1, type: 3}
       propertyPath: timeStopper
       value: 1
       objectReference: {fileID: 0}

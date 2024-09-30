@@ -433,11 +433,12 @@ public class Movement3 : MonoBehaviour
                 }
                 else if (wasWalking == true)
                 {
-                    speed = initialSpeed;
+                    speed = initialSpeed * 1.5f;
                 }
                 if(startJumping){
                     CheckRope();
-                rb.AddForce(new Vector2(0, jumpForce * 0.5f), ForceMode2D.Impulse);
+                rb.velocity = new Vector2(rb.velocity.x, 0); // Reset vertical velocity before applying jump force
+                rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
                 transform.position = new Vector2(transform.position.x, transform.position.y + 0.01f);
                 rb.velocity = new Vector2(speed * Input.GetAxis("Horizontal"), rb.velocity.y + jumpForce);
                 }

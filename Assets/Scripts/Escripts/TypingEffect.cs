@@ -12,8 +12,14 @@ public class TypingEffect : MonoBehaviour
     private string fullText; // The full text to display
     private string currentText = ""; // The text that is currently being displayed
 
+    private GameObject loadingText;
+
     void Start()
     {
+        //THE GAME OBJECT is child of Canvas/slide3/LOADING
+        loadingText = GameObject.Find("Canvas/slide3/LOADING");
+
+        // Get the AudioSource component
         audioSource = GetComponent<AudioSource>();
         // Debug logs to check component assignments
         if (uiText == null)
@@ -54,6 +60,15 @@ public class TypingEffect : MonoBehaviour
         StartCoroutine(TypeText());
     }
 
+    void Update()
+    {
+        // if the loading text is active, stop the typing effect
+        if (loadingText.activeSelf)
+        {
+            StopAllCoroutines();
+            audioSource.Stop();
+        }
+    }
     IEnumerator TypeText()
     {
         Debug.Log("Typing started for: " + gameObject.name);
@@ -67,22 +82,26 @@ public class TypingEffect : MonoBehaviour
             currentText += c;
             uiText.text = currentText;
 
-            // Play the typing sound
-            if (typingSound != null && audioSource != null)
+            //exit the for each if the loading text is active
+            if(loadingText.activeSelf)
+            {
+                yield break;
+            }
+            // Play the typing sound only if loadint text is disabled
+            if (typingSound != null && audioSource != null )
             {
                 if (!audioSource.isPlaying)
                 {
                     audioSource.PlayOneShot(typingSound);
                 }
             }
-
             yield return new WaitForSeconds(typingSpeed);
         }
 
         Debug.Log("Typing finished for: " + gameObject.name);
 
         // Stop the typing sound when typing is complete
-        if (audioSource != null)
+        if (audioSource != null && loadingText.activeSelf == true)
         {
             audioSource.Stop();
         }
