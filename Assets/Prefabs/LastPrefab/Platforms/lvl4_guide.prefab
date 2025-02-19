@@ -205,7 +205,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.91, y: 5.51}
+    oldSize: {x: 2.9104736, y: 5.5099998}
     newSize: {x: 2.91, y: 5.51}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -5546,11 +5546,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4054579615340720230, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
-      value: -100338
+      value: -122246
       objectReference: {fileID: 0}
     - target: {fileID: 4710487164322555738, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
-      value: -100246
+      value: -122154
       objectReference: {fileID: 0}
     - target: {fileID: 4970638018000415657, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_SortingLayer
@@ -5586,7 +5586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8920471863308619696, guid: fe6ea162d690bcb4eb415f65f3d4903f, type: 3}
       propertyPath: m_InstanceId
-      value: -100330
+      value: -122238
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

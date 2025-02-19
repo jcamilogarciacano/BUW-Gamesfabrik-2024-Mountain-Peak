@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Video;
 
 public class InitialTextSpawn : MonoBehaviour
 {
@@ -10,31 +11,56 @@ public class InitialTextSpawn : MonoBehaviour
     public GameObject text;
     public GameObject plane;
 
+    public bool useVideoPlayer = false;
+
     void Start()
     {
-        
+        if (useVideoPlayer)
+        {
+
+            // Construct the path to the video file
+            string videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, "IntroVid.webm");
+
+            // If running on WebGL, use UnityWebRequest to load the video
+#if UNITY_WEBGL
+            /* StartCoroutine(LoadVideo(videoPath)); */
+            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().url = videoPath;
+            // Prepare the video
+            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Prepare();
+#else
+            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().url = videoPath;
+            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Prepare();
+            //videoPlayer.Play();
+#endif
+        }
     }
 
     bool hasPaused = false;
 
     void Update()
     {
-        //when the video in the video player is 3 seconds in, pause the video and fade in the text
-        if (videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().time >= 3.5f && !hasPaused)
+        if (useVideoPlayer)
         {
-            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Pause();
-            //ShowText();
-            FadeText();
-            hasPaused = true;
-        }
-        if(Input.GetButtonDown("Camera")){
-            //continue video playback from where it left off
-            videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Play();
-        }
-        //if the video has ended, hide the videoplane
-        if (videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().time >= 6)
-        {
-            //plane.SetActive(false);
+            //when the video in the video player is 3 seconds in, pause the video and fade in the text
+            if (videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().time >= 3.5f && !hasPaused)
+            {
+                videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Pause();
+                //ShowText();
+                FadeText();
+                hasPaused = true;
+            }
+
+
+            if (Input.GetButtonDown("Camera"))
+            {
+                //continue video playback from where it left off
+                videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().Play();
+            }
+            //if the video has ended, hide the videoplane
+            if (videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().time >= 6)
+            {
+                //plane.SetActive(false);
+            }
         }
     }
 
@@ -74,4 +100,24 @@ public class InitialTextSpawn : MonoBehaviour
             yield return null;
         }
     }
+
+    // Load a video file using UnityWebRequest
+    // Coroutine to load video for WebGL
+    /*  private IEnumerator LoadVideo(string url)
+     {
+         using (UnityEngine.Networking.UnityWebRequest request = UnityEngine.Networking.UnityWebRequestMultimedia.GetMovieTexture(url))
+         {
+             yield return request.SendWebRequest();
+
+             if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+             {
+                 Debug.LogError($"Error loading video: {request.error}");
+                 yield break;
+             }
+
+             // Get the video texture from the request
+             VideoClip videoClip = DownloadHandlerVideoClip.GetContent(request);
+             videoPlayer.GetComponent<UnityEngine.Video.VideoPlayer>().clip = videoClip;
+         }
+     } */
 }

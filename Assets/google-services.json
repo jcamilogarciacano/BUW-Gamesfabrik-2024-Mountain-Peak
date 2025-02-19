@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817373662153",
+    "project_id": "mountain-peak-scoreboard",
+    "storage_bucket": "mountain-peak-scoreboard.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817373662153:android:083a36122cfbc00a837618",
+        "android_client_info": {
+          "package_name": "com.company.milorico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARko3DTFVww4Uh-AvQLtZ9oXu4S25aKis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
