@@ -1,3 +1,5 @@
+Play here: https://milorico.itch.io/mountain-peak
+
 !!!MOUNTAIN PEAK IS HERE TO CHALLENGE YOU!!
 
 In the heart of the mystical mountains lies a hidden path known only to the bravest souls. Your quest is to ascend the Mountain Peak, a journey filled with perilous platforms, ancient giants, and cunning spiders. The clock is ticking... 
@@ -26,5 +28,5 @@ This project was created as part of the Bauhaus Gamesfabrik summer semester 2024
 Credits:
 ![IM0nmf](https://github.com/user-attachments/assets/330cb93e-5a84-4cf9-8da9-fd75715b595b)
 
-
+Play here: https://milorico.itch.io/mountain-peak
 
