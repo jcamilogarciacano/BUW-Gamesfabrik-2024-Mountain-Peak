@@ -1,4 +1,5 @@
 Mountain Peak
+
 !!!MOUNTAIN PEAK IS HERE TO CHALLENGE YOU!!
 
 In the heart of the mystical mountains lies a hidden path known only to the bravest souls. Your quest is to ascend the Mountain Peak, a journey filled with perilous platforms, ancient giants, and cunning spiders. The clock is ticking... 
